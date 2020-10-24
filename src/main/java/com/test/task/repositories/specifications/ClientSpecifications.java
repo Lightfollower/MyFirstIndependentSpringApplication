@@ -18,13 +18,14 @@ public class ClientSpecifications {
                 criteriaBuilder.equal(root.get("form"), form);
     }
 
-    public static Specification<Client> bankIs(Bank bank) {
+//    public static Specification<Client> bankIs(Bank bank) {
+//        return (root, criteriaQuery, criteriaBuilder) ->
+//                criteriaBuilder.equal(root.get("bank"), bank);
+//    }
+    
+    public static Specification<Client> clientIs(Long client) {
         return (root, criteriaQuery, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("bank"), bank);
-    }
-    public static Specification<Client> clientIs(String client) {
-        return (root, criteriaQuery, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("name"), client);
+                criteriaBuilder.equal(root.get("id"), client);
     }
 
 //

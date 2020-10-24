@@ -15,7 +15,7 @@ import java.util.Set;
 public class ClientFilter {
     private Specification<Client> spec;
 
-    public ClientFilter(Map<String, String> map, Form formFilter, Set<Client> clientSet) {
+    public ClientFilter(Map<String, String> map, Form formFilter, Set<Long> clientSet) {
         this.spec = Specification.where(null);
 //        this.filterDefinition = new StringBuilder();
             if (map.containsKey("address")) {
@@ -39,11 +39,11 @@ public class ClientFilter {
 //            }
         if (clientSet != null && !clientSet.isEmpty()) {
             Specification specClients = null;
-            for (Client c : clientSet) {
+            for (Long c : clientSet) {
                 if (specClients == null) {
-                    specClients = ClientSpecifications.clientIs(c.getName());
+                    specClients = ClientSpecifications.clientIs(c);
                 } else {
-                    specClients = specClients.or(ClientSpecifications.clientIs(c.getName()));
+                    specClients = specClients.or(ClientSpecifications.clientIs(c));
                 }
             }
             spec = spec.and(specClients);

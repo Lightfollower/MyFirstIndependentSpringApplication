@@ -25,6 +25,7 @@ public class ClientController {
     private static final String PAGE_STRING = "page";
     private static final String FORM_STRING = "form";
     private static final String BANK_NAME = "bank";
+    private static final String RATE_STRING = "rate";
     private ClientService clientService;
     private FormService formService;
     private BankService bankService;
@@ -57,7 +58,7 @@ public class ClientController {
         if (requestParams.containsKey(FORM_STRING)) {
             formFilter = formService.getByName(requestParams.get(FORM_STRING));
         }
-        Set<Client> clientsByBankName = null;
+        Set<Long> clientsByBankName = null;
         if (requestParams.containsKey(BANK_NAME)) {
             clientsByBankName = getClientsByBank(requestParams.get(BANK_NAME));
         }
@@ -81,12 +82,12 @@ public class ClientController {
         return banks;
     }
 
-    private Set<Client> getClientsByBank(String bankName){
-        Set<Client> clients = new HashSet<>();
+    private Set<Long> getClientsByBank(String bankName){
+        Set<Long> clients = new HashSet<>();
         List<Deposit> deposits = bankService.getByName(bankName).getDeposits();
         for (Deposit d :
                 deposits) {
-            clients.add(d.getClient());
+            clients.add(d.getClient().getId());
         }
         return clients;
     }
