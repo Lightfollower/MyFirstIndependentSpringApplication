@@ -15,9 +15,15 @@ public class FormService {
         this.formRepository = formRepository;
     }
 
+    public Form getByName(String name){
+        return formRepository.getByName(name);
+    }
+
     public FormDto getForm(Long id){
         return formRepository.getById(id);
     }
+
+
 
     public void addForm(Form form){
         System.out.println("ololo");

@@ -11,6 +11,11 @@ public class ClientSpecifications {
         return (root, criteriaQuery, criteriaBuilder) ->
                 criteriaBuilder.like(root.get("address"), address);
     }
+
+    public static Specification<Client> formIs(Form form) {
+        return (root, criteriaQuery, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("form"), form);
+    }
 //
 //    public static Specification<Product> priceLesserOrEqualsThan(int maxPrice) {
 //        return (root, criteriaQuery, criteriaBuilder) ->

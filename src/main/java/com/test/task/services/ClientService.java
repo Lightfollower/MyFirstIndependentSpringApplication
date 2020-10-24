@@ -23,12 +23,9 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
     @Autowired
-
     public void setDepositService(DepositService depositService) {
         this.depositService = depositService;
     }
-
-
 
     public List<ClientDto> findAll(Specification<Client> spec, int page) {
         List<ClientDto> clientDtoList = new ArrayList<>();
