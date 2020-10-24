@@ -22,10 +22,15 @@ public class ClientSpecifications {
 //        return (root, criteriaQuery, criteriaBuilder) ->
 //                criteriaBuilder.equal(root.get("bank"), bank);
 //    }
-    
+
     public static Specification<Client> clientIs(Long client) {
         return (root, criteriaQuery, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("id"), client);
+    }
+
+    public static Specification<Client> nameEquals(String name) {
+        return (root, criteriaQuery, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("name"), name);
     }
 
 //

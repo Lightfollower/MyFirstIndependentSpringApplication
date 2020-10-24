@@ -22,10 +22,10 @@ public class ClientFilter {
                 String address = map.get("address");
                 spec = spec.and(ClientSpecifications.addressLike(address));
             }
-//            if (map.containsKey("form")) {
-//                String form = map.get("form");
-//                spec = spec.and(ClientSpecifications.formEquals(form));
-//            }
+            if (map.containsKey("name")) {
+                String name = map.get("name");
+                spec = spec.and(ClientSpecifications.nameEquals(name));
+            }
 //            if (map.containsKey("title") && !map.get("title").isEmpty()) {
 //                String title = map.get("title");
 //                spec = spec.and(ProductSpecifications.titleContainsFollowingExpression(title));

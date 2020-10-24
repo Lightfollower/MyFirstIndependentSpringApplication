@@ -25,7 +25,6 @@ public class ClientController {
     private static final String PAGE_STRING = "page";
     private static final String FORM_STRING = "form";
     private static final String BANK_NAME = "bank";
-    private static final String RATE_STRING = "rate";
     private ClientService clientService;
     private FormService formService;
     private BankService bankService;
