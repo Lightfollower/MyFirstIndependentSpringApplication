@@ -16,8 +16,8 @@ public class DepositDto {
     private int term;
 
     @JsonBackReference
-    private ClientDto client;
+    private String client;
 
     @JsonBackReference
-    private BankDto bank;
+    private String bank;
 }

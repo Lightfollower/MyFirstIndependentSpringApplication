@@ -22,11 +22,13 @@ public class ClientService {
     public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
-
     @Autowired
+
     public void setDepositService(DepositService depositService) {
         this.depositService = depositService;
     }
+
+
 
     public List<ClientDto> findAll(Specification<Client> spec, int page) {
         List<ClientDto> clientDtoList = new ArrayList<>();
@@ -60,6 +62,7 @@ public class ClientService {
         clientDto.setShortName(client.getShortName());
         clientDto.setAddress(client.getAddress());
         clientDto.setDeposits(depositService.getDtoFromDeposit(client.getDeposits()));
+        clientDto.setForm(client.getForm().getName());
         return clientDto;
     }
 }

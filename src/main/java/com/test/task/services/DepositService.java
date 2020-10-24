@@ -38,8 +38,8 @@ public class DepositService {
             depositDto.setDate(deposit.getDate());
             depositDto.setRate(deposit.getRate());
             depositDto.setTerm(deposit.getTerm());
-            depositDto.setClient(clientService.getDtoFromClient(deposit.getClient()));
-//            depositDto.s
+            depositDto.setClient(deposit.getClient().getName());
+            depositDtos.add(depositDto);
         }
         return depositDtos;
     }
