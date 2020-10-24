@@ -1,5 +1,6 @@
 package com.test.task.repositories.specifications;
 
+import com.test.task.entities.Bank;
 import com.test.task.entities.Client;
 import com.test.task.entities.Form;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,6 +17,16 @@ public class ClientSpecifications {
         return (root, criteriaQuery, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("form"), form);
     }
+
+    public static Specification<Client> bankIs(Bank bank) {
+        return (root, criteriaQuery, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("bank"), bank);
+    }
+    public static Specification<Client> clientIs(String client) {
+        return (root, criteriaQuery, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("name"), client);
+    }
+
 //
 //    public static Specification<Product> priceLesserOrEqualsThan(int maxPrice) {
 //        return (root, criteriaQuery, criteriaBuilder) ->

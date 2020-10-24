@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 public class ClientService {
-    final int PAGE_SIZE = 1;
+    final int PAGE_SIZE = 5;
     ClientRepository clientRepository;
     DepositService depositService;
 
@@ -48,7 +48,7 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
-    public ClientDto getClientById(Long i) {
+    public Client getClientById(Long i) {
         return clientRepository.getById(i);
     }
 

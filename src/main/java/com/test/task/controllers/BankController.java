@@ -17,8 +17,8 @@ public class BankController {
     }
 
     @GetMapping
-    public BankDto get(){
-       return bankService.getBank();
+    public Bank get(){
+       return bankService.getById(1L);
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")

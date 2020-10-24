@@ -14,6 +14,6 @@ import java.util.List;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long>, JpaSpecificationExecutor<Client> {
-    ClientDto getById(Long id);
+    Client getById(Long id);
     Page<ClientDto> findAllBy(Specification<Client> spec, Pageable pageable);
 }

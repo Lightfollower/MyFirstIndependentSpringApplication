@@ -1,5 +1,6 @@
 package com.test.task.utils;
 
+import com.test.task.entities.Bank;
 import com.test.task.entities.Client;
 import com.test.task.entities.Form;
 import com.test.task.repositories.specifications.ClientSpecifications;
@@ -8,12 +9,13 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Getter
 public class ClientFilter {
     private Specification<Client> spec;
 
-    public ClientFilter(Map<String, String> map, Form formFilter) {
+    public ClientFilter(Map<String, String> map, Form formFilter, Set<Client> clientSet) {
         this.spec = Specification.where(null);
 //        this.filterDefinition = new StringBuilder();
             if (map.containsKey("address")) {
@@ -30,13 +32,21 @@ public class ClientFilter {
 //                filterDefinition.append("&title=").append(title);
 //            }
             if (formFilter != null) {
-                Specification specCategories = null;
-                    if (specCategories == null) {
-                        specCategories = ClientSpecifications.formIs(formFilter);
-                    } else {
-                        specCategories = specCategories.or(ClientSpecifications.formIs(formFilter));
-                    }
-                spec = spec.and(specCategories);
+                spec = spec.and(ClientSpecifications.formIs(formFilter));
             }
+//            if (bankFilter != null) {
+//                spec = spec.and(ClientSpecifications.bankIs(bankFilter));
+//            }
+        if (clientSet != null && !clientSet.isEmpty()) {
+            Specification specClients = null;
+            for (Client c : clientSet) {
+                if (specClients == null) {
+                    specClients = ClientSpecifications.clientIs(c.getName());
+                } else {
+                    specClients = specClients.or(ClientSpecifications.clientIs(c.getName()));
+                }
+            }
+            spec = spec.and(specClients);
+        }
     }
 }

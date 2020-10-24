@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BankRepository extends JpaRepository<Bank, Long> {
-    BankDto getById(Long id);
+    Bank getByName(String name);
+    Bank getById(Long id);
 }

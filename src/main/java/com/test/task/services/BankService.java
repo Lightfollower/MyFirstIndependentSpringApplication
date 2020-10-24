@@ -15,7 +15,11 @@ public class BankService {
         this.bankRepository = bankRepository;
     }
 
-    public BankDto getBank(){
-        return bankRepository.getById(1L);
+    public Bank getById(Long id){
+        return bankRepository.getById(id);
+    }
+
+    public Bank getByName(String name){
+        return bankRepository.getByName(name);
     }
 }
