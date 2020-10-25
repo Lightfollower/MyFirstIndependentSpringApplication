@@ -6,6 +6,7 @@ import com.test.task.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,9 @@ public class ClientService {
     }
 
     public List<ClientDto> findAll(Specification<Client> spec, int page) {
+        if (page < 1L) {
+            page = 0;
+        }
         List<ClientDto> clientDtoList = new ArrayList<>();
         List<Client> clientList = clientRepository.findAll(spec, PageRequest.of(page, PAGE_SIZE)).getContent();
         for (Client client :
@@ -58,8 +62,8 @@ public class ClientService {
         clientDto.setName(client.getName());
         clientDto.setShortName(client.getShortName());
         clientDto.setAddress(client.getAddress());
-        clientDto.setDeposits(depositService.getDtoFromDeposit(client.getDeposits()));
-        clientDto.setForm(client.getForm().getName());
+        clientDto.setForm(client.getForm());
+        clientDto.setDeposits(depositService.getDtoListFromDepositList(client.getDeposits(), clientDto));
         return clientDto;
     }
 }

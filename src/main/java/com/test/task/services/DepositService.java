@@ -1,6 +1,7 @@
 package com.test.task.services;
 
 import com.test.task.entities.Deposit;
+import com.test.task.entities.dtos.ClientDto;
 import com.test.task.entities.dtos.DepositDto;
 import com.test.task.repositories.DepositRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +30,31 @@ public class DepositService {
         return depositRepository.getById(id);
     }
 
-    public List<DepositDto> getDtoFromDeposit(List<Deposit> deposits) {
+    public List<DepositDto> getDtoListFromDepositList(List<Deposit> deposits) {
         List<DepositDto> depositDtos = new ArrayList<>();
         for (Deposit deposit :
                 deposits) {
-            DepositDto depositDto = new DepositDto();
-            depositDto.setId(deposit.getId());
-            depositDto.setDate(deposit.getDate());
-            depositDto.setRate(deposit.getRate());
-            depositDto.setTerm(deposit.getTerm());
-            depositDto.setClient(deposit.getClient().getName());
-            depositDtos.add(depositDto);
+            depositDtos.add(getDepositDtoFromDeposit(deposit, clientService.getDtoFromClient(deposit.getClient())));
         }
         return depositDtos;
+    }
+
+    public List<DepositDto> getDtoListFromDepositList(List<Deposit> deposits, ClientDto clientDto) {
+        List<DepositDto> depositDtos = new ArrayList<>();
+        for (Deposit deposit :
+                deposits) {
+            depositDtos.add(getDepositDtoFromDeposit(deposit, clientDto));
+        }
+        return depositDtos;
+    }
+
+    private DepositDto getDepositDtoFromDeposit(Deposit deposit, ClientDto clientDto) {
+        DepositDto depositDto = new DepositDto();
+        depositDto.setId(deposit.getId());
+        depositDto.setDate(deposit.getDate());
+        depositDto.setRate(deposit.getRate());
+        depositDto.setTerm(deposit.getTerm());
+        depositDto.setClient(clientDto);
+        return depositDto;
     }
 }
