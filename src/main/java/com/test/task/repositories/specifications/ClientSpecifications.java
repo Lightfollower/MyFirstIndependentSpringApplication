@@ -54,9 +54,24 @@ public class ClientSpecifications {
     public static Specification<Client> sortByNameSpec(String direction) {
         return (Specification<Client>) (root, criteriaQuery, criteriaBuilder) -> {
             switch (direction) {
-                case "asc" : criteriaQuery.orderBy(criteriaBuilder.asc(root.get("name")));
-                break;
-                case "desc" : criteriaQuery.orderBy(criteriaBuilder.desc(root.get("name")));
+                case "asc":
+                    criteriaQuery.orderBy(criteriaBuilder.asc(root.get("name")));
+                    break;
+                case "desc":
+                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("name")));
+            }
+            return criteriaBuilder.and();
+        };
+    }
+
+    public static Specification<Client> sortByFormSpec(String direction) {
+        return (Specification<Client>) (root, criteriaQuery, criteriaBuilder) -> {
+            switch (direction) {
+                case "asc":
+                    criteriaQuery.orderBy(criteriaBuilder.asc(root.get("form").get("name")));
+                    break;
+                case "desc":
+                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("form").get("name")));
             }
             return criteriaBuilder.and();
         };
