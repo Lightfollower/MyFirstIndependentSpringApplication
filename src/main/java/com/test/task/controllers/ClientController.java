@@ -9,6 +9,7 @@ import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.services.FormService;
 import com.test.task.utils.ClientFilter;
+import com.test.task.utils.ClientSorter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,7 +63,8 @@ public class ClientController {
             clientsByBankName = getClientsByBank(requestParams.get(BANK_NAME));
         }
         ClientFilter clientFilter = new ClientFilter(requestParams, formFilter, clientsByBankName);
-        return clientService.findAll(clientFilter.getSpec(), pageNumber);
+        ClientSorter clientSorter = new ClientSorter(requestParams);
+        return clientService.findAll(clientFilter.getSpec(), pageNumber, clientSorter.getSort());
     }
 
     @PostMapping()

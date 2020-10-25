@@ -6,11 +6,13 @@ import com.test.task.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ClientService {
@@ -22,17 +24,19 @@ public class ClientService {
     public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
+
     @Autowired
     public void setDepositService(DepositService depositService) {
         this.depositService = depositService;
     }
 
-    public List<ClientDto> findAll(Specification<Client> spec, int page) {
+    public List<ClientDto> findAll(Specification<Client> spec, int page, Sort sort) {
         if (page < 1L) {
             page = 0;
         }
         List<ClientDto> clientDtoList = new ArrayList<>();
-        List<Client> clientList = clientRepository.findAll(spec, PageRequest.of(page, PAGE_SIZE)).getContent();
+
+        List<Client> clientList = clientRepository.findAll(spec, PageRequest.of(page, PAGE_SIZE, sort)).getContent();
         for (Client client :
                 clientList) {
             clientDtoList.add(getDtoFromClient(client));

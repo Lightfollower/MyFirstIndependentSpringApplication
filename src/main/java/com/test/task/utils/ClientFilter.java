@@ -24,18 +24,13 @@ public class ClientFilter {
                 String name = requestParams.get("name");
                 spec = spec.and(ClientSpecifications.nameEquals(name));
             }
-            if(requestParams.containsKey("name_sort")){
-                String direction = requestParams.get("name_sort");
-                spec = spec.and(ClientSpecifications.sortByNameSpec(direction));
-            }
-            if(requestParams.containsKey("form_sort")){
-                String direction = requestParams.get("form_sort");
-                spec = spec.and(ClientSpecifications.sortByFormSpec(direction));
-            }
-//            if (map.containsKey("title") && !map.get("title").isEmpty()) {
-//                String title = map.get("title");
-//                spec = spec.and(ProductSpecifications.titleContainsFollowingExpression(title));
-//                filterDefinition.append("&title=").append(title);
+//            if(requestParams.containsKey("name_sort")){
+//                String direction = requestParams.get("name_sort");
+//                spec = spec.and(ClientSpecifications.sortByNameSpec(direction));
+//            }
+//            if(requestParams.containsKey("form_sort")){
+//                String direction = requestParams.get("form_sort");
+//                spec = spec.and(ClientSpecifications.sortByFormSpec(direction));
 //            }
             if (formFilter != null) {
                 spec = spec.and(ClientSpecifications.formIs(formFilter));
