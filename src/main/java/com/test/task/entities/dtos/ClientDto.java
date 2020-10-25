@@ -1,6 +1,5 @@
 package com.test.task.entities.dtos;
 
-import com.test.task.entities.Deposit;
 import com.test.task.entities.Form;
 import lombok.Data;
 

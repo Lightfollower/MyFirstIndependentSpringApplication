@@ -1,11 +1,8 @@
 package com.test.task.repositories.specifications;
 
-import com.test.task.entities.Bank;
 import com.test.task.entities.Client;
 import com.test.task.entities.Form;
 import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.CriteriaBuilder;
 
 public class ClientSpecifications {
     public static Specification<Client> addressLike(String address) {
@@ -14,9 +11,13 @@ public class ClientSpecifications {
     }
 
     public static Specification<Client> formIs(Form form) {
-        return (root, criteriaQuery, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("form"), form);
+        return (Specification<Client>) (root, criteriaQuery, criteriaBuilder) -> {
+//            criteriaQuery.orderBy(criteriaBuilder.asc(root.get("name")));
+            return criteriaBuilder.equal(root.get("form"), form);
+        };
     }
+
+
 
 //    public static Specification<Client> bankIs(Bank bank) {
 //        return (root, criteriaQuery, criteriaBuilder) ->
@@ -49,4 +50,15 @@ public class ClientSpecifications {
 //            return criteriaBuilder.isMember(category, root.get("categories"));
 //        };
 //    }
+
+    public static Specification<Client> sortByNameSpec(String direction) {
+        return (Specification<Client>) (root, criteriaQuery, criteriaBuilder) -> {
+            switch (direction) {
+                case "asc" : criteriaQuery.orderBy(criteriaBuilder.asc(root.get("name")));
+                break;
+                case "desc" : criteriaQuery.orderBy(criteriaBuilder.desc(root.get("name")));
+            }
+            return criteriaBuilder.and();
+        };
+    }
 }

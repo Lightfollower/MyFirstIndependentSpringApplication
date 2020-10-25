@@ -1,13 +1,11 @@
 package com.test.task.utils;
 
-import com.test.task.entities.Bank;
 import com.test.task.entities.Client;
 import com.test.task.entities.Form;
 import com.test.task.repositories.specifications.ClientSpecifications;
 import lombok.Getter;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,16 +13,20 @@ import java.util.Set;
 public class ClientFilter {
     private Specification<Client> spec;
 
-    public ClientFilter(Map<String, String> map, Form formFilter, Set<Long> clientSet) {
+    public ClientFilter(Map<String, String> requestParams, Form formFilter, Set<Long> clientSet) {
         this.spec = Specification.where(null);
 //        this.filterDefinition = new StringBuilder();
-            if (map.containsKey("address")) {
-                String address = map.get("address");
+            if (requestParams.containsKey("address")) {
+                String address = requestParams.get("address");
                 spec = spec.and(ClientSpecifications.addressLike(address));
             }
-            if (map.containsKey("name")) {
-                String name = map.get("name");
+            if (requestParams.containsKey("name")) {
+                String name = requestParams.get("name");
                 spec = spec.and(ClientSpecifications.nameEquals(name));
+            }
+            if(requestParams.containsKey("name_sort")){
+                String direction = requestParams.get("name_sort");
+                spec = spec.and(ClientSpecifications.sortByNameSpec(direction));
             }
 //            if (map.containsKey("title") && !map.get("title").isEmpty()) {
 //                String title = map.get("title");
