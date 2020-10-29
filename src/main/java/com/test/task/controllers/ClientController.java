@@ -67,10 +67,11 @@ public class ClientController {
         return clientService.findAll(clientFilter.getSpec(), pageNumber, clientSorter.getSort());
     }
 
-    @PostMapping()
-    public void add(@RequestBody Client client) {
-        clientService.saveNewClient(client);
-//        return clientService.getClientById(client.getId());
+    @PostMapping(consumes = "application/json")
+//    Deposits, Form, Id must be null.
+    public Client add(@RequestBody Client client) {
+        System.out.println(client);
+        return clientService.saveNewClient(client);
     }
 
     private Set<Bank> getBanksOfClient(Long client) {
