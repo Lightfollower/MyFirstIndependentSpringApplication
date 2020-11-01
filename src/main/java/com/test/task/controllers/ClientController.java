@@ -68,11 +68,20 @@ public class ClientController {
     }
 
     @PostMapping(consumes = "application/json")
-//    Deposits, Form, Id must be null.
-    public Client add(@RequestBody Client client) {
-        System.out.println(client);
-        return clientService.saveNewClient(client);
+    public ClientDto add(@RequestBody Client client) {
+        if (client.getId() != null) {
+            client.setId(null);
+        }
+        client.setForm(formService.getOne(client.getForm().getId()));
+        return clientService.getDtoFromClient(clientService.saveNewClient(client));
     }
+
+//    @PutMapping(consumes = "application/json")
+//    public ClientDto modify(@RequestBody ClientDto clientDto){
+//        Client client
+//        clientService.saveNewClient(clientDto);
+//        return null;
+//    }
 
     private Set<Bank> getBanksOfClient(Long client) {
         Set<Bank> banks = new HashSet<>();
@@ -84,7 +93,7 @@ public class ClientController {
         return banks;
     }
 
-    private Set<Long> getClientsByBank(String bankName){
+    private Set<Long> getClientsByBank(String bankName) {
         Set<Long> clients = new HashSet<>();
         List<Deposit> deposits = bankService.getByName(bankName).getDeposits();
         for (Deposit d :

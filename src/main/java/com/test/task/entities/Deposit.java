@@ -31,13 +31,13 @@ public class Deposit {
     @JoinTable(name = "deposits_clients",
             joinColumns = @JoinColumn(name = "deposit_id"),
             inverseJoinColumns = @JoinColumn(name = "client_id"))
-    @JsonBackReference
+//    @JsonBackReference
     private Client client;
 
     @ManyToOne
     @JoinTable(name = "deposits_banks",
             joinColumns = @JoinColumn(name = "deposit_id"),
             inverseJoinColumns = @JoinColumn(name = "bank_id"))
-    @JsonBackReference
+//    @JsonBackReference
     private Bank bank;
 }

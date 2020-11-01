@@ -1,10 +1,11 @@
 package com.test.task.controllers;
 
 import com.test.task.entities.Form;
-import com.test.task.entities.dtos.FormDto;
 import com.test.task.services.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("api/v1/forms")
 @RestController
@@ -17,8 +18,8 @@ public class FormController {
     }
 
     @GetMapping
-    public FormDto get(){
-        return formService.getForm(1L);
+    public List<Form> get(){
+        return formService.findAll();
     }
 
     @PostMapping

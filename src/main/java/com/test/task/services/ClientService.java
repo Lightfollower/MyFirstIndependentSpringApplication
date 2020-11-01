@@ -17,8 +17,8 @@ import java.util.Map;
 @Service
 public class ClientService {
     final int PAGE_SIZE = 5;
-    ClientRepository clientRepository;
-    DepositService depositService;
+    private ClientRepository clientRepository;
+    private DepositService depositService;
 
     @Autowired
     public ClientService(ClientRepository clientRepository) {
@@ -65,8 +65,19 @@ public class ClientService {
         clientDto.setName(client.getName());
         clientDto.setShortName(client.getShortName());
         clientDto.setAddress(client.getAddress());
-        clientDto.setForm(client.getForm());
-        clientDto.setDeposits(depositService.getDtoListFromDepositList(client.getDeposits(), clientDto));
+//        clientDto.setForm(client.getForm());
+//        clientDto.setDeposits(depositService.getDtoListFromDepositList(client.getDeposits(), clientDto));
         return clientDto;
+    }
+
+    public Client getClientFromDto(ClientDto clientDto) {
+        Client client = new Client();
+        client.setId(clientDto.getId());
+        client.setName(clientDto.getName());
+        client.setShortName(clientDto.getShortName());
+        client.setAddress(clientDto.getAddress());
+//        client.setForm(clientDto.getForm());
+//        client.setDeposits(depositService.getDepositListFromDepositDtoList(clientDto.getDeposits(), client));
+        return client;
     }
 }
