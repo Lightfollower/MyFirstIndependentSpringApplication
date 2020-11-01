@@ -15,7 +15,7 @@ public class BankService {
         this.bankRepository = bankRepository;
     }
 
-    public Bank getById(Long id){
+    public Bank getBankById(Long id){
         return bankRepository.getById(id);
     }
 

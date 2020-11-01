@@ -1,7 +1,6 @@
 package com.test.task.controllers;
 
 import com.test.task.entities.Bank;
-import com.test.task.entities.dtos.BankDto;
 import com.test.task.services.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ public class BankController {
 
     @GetMapping
     public Bank get(){
-       return bankService.getById(1L);
+       return bankService.getBankById(1L);
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")

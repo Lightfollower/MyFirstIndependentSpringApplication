@@ -26,8 +26,14 @@ public class DepositService {
         this.clientService = clientService;
     }
 
-    public List<Deposit> findAll(){
-        return depositRepository.findAll();
+    public List<DepositDto> findAll(){
+        List<Deposit> deposits = depositRepository.findAll();
+        System.out.println(deposits.size());
+        for (Deposit d :
+                deposits) {
+            System.out.println(d.getClient().getName());
+        };
+        return getDtoListFromDepositList(deposits);
     }
 
     public Deposit save(Deposit deposit){
