@@ -13,8 +13,8 @@ import java.util.List;
 
 @Service
 public class DepositService {
-    ClientService clientService;
-    DepositRepository depositRepository;
+    private ClientService clientService;
+    private DepositRepository depositRepository;
 
     @Autowired
     public DepositService(DepositRepository depositRepository) {
@@ -24,6 +24,14 @@ public class DepositService {
     @Autowired
     public void setClientService(ClientService clientService) {
         this.clientService = clientService;
+    }
+
+    public List<Deposit> findAll(){
+        return depositRepository.findAll();
+    }
+
+    public Deposit save(Deposit deposit){
+        return depositRepository.save(deposit);
     }
 
     public DepositDto getDepositById(Long id){
