@@ -57,7 +57,7 @@ public class ClientService {
         return clientRepository.findAllBy(spec, PageRequest.of(page, PAGE_SIZE));
     }
 
-    public Client saveNewClient(Client client) {
+    public Client saveOrUpdateClient(Client client) {
         return clientRepository.save(client);
     }
 

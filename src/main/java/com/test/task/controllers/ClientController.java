@@ -73,15 +73,16 @@ public class ClientController {
             client.setId(null);
         }
         client.setForm(formService.getOne(client.getForm().getId()));
-        return clientService.getDtoFromClient(clientService.saveNewClient(client));
+        return clientService.getDtoFromClient(clientService.saveOrUpdateClient(client));
     }
 
-//    @PutMapping(consumes = "application/json")
-//    public ClientDto modify(@RequestBody ClientDto clientDto){
-//        Client client
-//        clientService.saveNewClient(clientDto);
-//        return null;
-//    }
+    @PutMapping(consumes = "application/json")
+    public ClientDto modify(@RequestBody Client client){
+        if(client.getId() == null){
+            throw new RuntimeException("client id can't be null");
+        }
+        return clientService.getDtoFromClient(clientService.saveOrUpdateClient(client));
+    }
 
     private Set<Bank> getBanksOfClient(Long client) {
         Set<Bank> banks = new HashSet<>();
