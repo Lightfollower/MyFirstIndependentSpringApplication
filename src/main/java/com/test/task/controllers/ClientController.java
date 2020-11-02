@@ -73,7 +73,7 @@ public class ClientController {
             client.setId(null);
         }
         client.setForm(formService.getOne(client.getForm().getId()));
-        return clientService.getDtoFromClient(clientService.saveOrUpdateClient(client));
+        return clientService.saveOrUpdateClient(client);
     }
 
     @PutMapping(consumes = "application/json")
@@ -81,7 +81,13 @@ public class ClientController {
         if(client.getId() == null){
             throw new RuntimeException("client id can't be null");
         }
-        return clientService.getDtoFromClient(clientService.saveOrUpdateClient(client));
+        return clientService.saveOrUpdateClient(client);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id){
+        System.out.println(id);
+        clientService.deleteById(id);
     }
 
     private Set<Bank> getBanksOfClient(Long client) {

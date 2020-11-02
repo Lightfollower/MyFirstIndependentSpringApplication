@@ -57,12 +57,17 @@ public class ClientService {
         return clientRepository.findAllBy(spec, PageRequest.of(page, PAGE_SIZE));
     }
 
-    public Client saveOrUpdateClient(Client client) {
-        return clientRepository.save(client);
+    public ClientDto saveOrUpdateClient(Client client) {
+        return getDtoFromClient(clientRepository.save(client));
     }
 
     public Client getClientById(Long i) {
         return clientRepository.getById(i);
+    }
+
+    public void deleteById(Long id){
+        System.out.println("ololo" + id);
+        clientRepository.deleteById(id);
     }
 
     public ClientDto getDtoFromClient(Client client) {
