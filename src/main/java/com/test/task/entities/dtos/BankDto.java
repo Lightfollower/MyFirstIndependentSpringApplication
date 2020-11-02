@@ -1,13 +1,16 @@
 package com.test.task.entities.dtos;
 
+import lombok.Data;
+
 import java.util.List;
 
-public interface BankDto {
-    Long getId();
+@Data
+public class BankDto {
+    private Long id;
 
-    String getName();
+    private String name;
 
-    String getBIC();
+    private String BIC;
 
-    List<DepositDto> getDeposits();
+//    private List<DepositDto> deposits;
 }

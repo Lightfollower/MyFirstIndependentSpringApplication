@@ -14,6 +14,7 @@ import java.util.List;
 @Service
 public class DepositService {
     private ClientService clientService;
+    private BankService bankService;
     private DepositRepository depositRepository;
 
     @Autowired
@@ -26,21 +27,27 @@ public class DepositService {
         this.clientService = clientService;
     }
 
-    public List<DepositDto> findAll(){
+    @Autowired
+    public void setBankService(BankService bankService) {
+        this.bankService = bankService;
+    }
+
+    public List<DepositDto> findAll() {
         List<Deposit> deposits = depositRepository.findAll();
         System.out.println(deposits.size());
         for (Deposit d :
                 deposits) {
             System.out.println(d.getClient().getName());
-        };
+        }
+        ;
         return getDtoListFromDepositList(deposits);
     }
 
-    public Deposit save(Deposit deposit){
-        return depositRepository.save(deposit);
+    public DepositDto saveOrUpdate(Deposit deposit) {
+        return getDepositDtoFromDeposit(depositRepository.save(deposit), clientService.getDtoFromClient(deposit.getClient()));
     }
 
-    public DepositDto getDepositById(Long id){
+    public DepositDto getDepositById(Long id) {
         return depositRepository.getById(id);
     }
 
@@ -69,6 +76,8 @@ public class DepositService {
         depositDto.setRate(deposit.getRate());
         depositDto.setTerm(deposit.getTerm());
         depositDto.setClient(clientDto);
+        depositDto.setBank(bankService.getDtoFromBank(deposit.getBank()));
+        System.out.println("ololo " + depositDto.getClient().getName());
         return depositDto;
     }
 }

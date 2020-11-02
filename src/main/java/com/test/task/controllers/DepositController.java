@@ -24,23 +24,26 @@ public class DepositController {
         this.bankService = bankService;
     }
 
-    @GetMapping("ol")
-    public DepositDto ol(){
-        return depositService.getDepositById(1L);
-    }
-
     @GetMapping
     public List<DepositDto> findAll(){
         return depositService.findAll();
     }
 
     @PostMapping
-    public void add(@RequestBody Deposit deposit){
+    public DepositDto add(@RequestBody Deposit deposit){
         if (deposit.getId() != null) {
             deposit.setId(null);
         }
         deposit.setClient(clientService.getClientById(deposit.getClient().getId()));
         deposit.setBank(bankService.getBankById(deposit.getBank().getId()));
-        depositService.save(deposit);
+        return depositService.saveOrUpdate(deposit);
+    }
+
+    @PutMapping
+    public DepositDto modify(@RequestBody Deposit deposit){
+        if (deposit.getId() == null) {
+            throw new RuntimeException("Deposit id can't be null");
+        }
+        return depositService.saveOrUpdate(deposit);
     }
 }
