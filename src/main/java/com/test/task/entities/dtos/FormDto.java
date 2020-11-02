@@ -1,7 +1,10 @@
 package com.test.task.entities.dtos;
 
-public interface FormDto {
-    Long getId();
+import lombok.Data;
 
-    String getName();
+@Data
+public class FormDto {
+    private Long id;
+
+    private String name;
 }

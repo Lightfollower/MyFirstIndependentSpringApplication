@@ -19,6 +19,7 @@ public class ClientService {
     final int PAGE_SIZE = 5;
     private ClientRepository clientRepository;
     private DepositService depositService;
+    private FormService formService;
 
     @Autowired
     public ClientService(ClientRepository clientRepository) {
@@ -28,6 +29,11 @@ public class ClientService {
     @Autowired
     public void setDepositService(DepositService depositService) {
         this.depositService = depositService;
+    }
+
+    @Autowired
+    public void setFormService(FormService formService) {
+        this.formService = formService;
     }
 
     public List<ClientDto> findAll(Specification<Client> spec, int page, Sort sort) {
@@ -65,7 +71,7 @@ public class ClientService {
         clientDto.setName(client.getName());
         clientDto.setShortName(client.getShortName());
         clientDto.setAddress(client.getAddress());
-//        clientDto.setForm(client.getForm());
+        clientDto.setForm(formService.getFormDtoFromForm(client.getForm()));
 //        clientDto.setDeposits(depositService.getDtoListFromDepositList(client.getDeposits(), clientDto));
         return clientDto;
     }

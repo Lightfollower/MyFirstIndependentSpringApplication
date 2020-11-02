@@ -47,4 +47,11 @@ public class FormService {
     public List<Form> findAll() {
         return formRepository.findAll();
     }
+
+    public FormDto getFormDtoFromForm(Form form) {
+        FormDto formDto = new FormDto();
+        formDto.setId(form.getId());
+        formDto.setName(form.getName());
+        return formDto;
+    }
 }

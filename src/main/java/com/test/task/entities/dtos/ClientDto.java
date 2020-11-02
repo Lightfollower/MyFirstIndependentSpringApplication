@@ -17,5 +17,5 @@ public class ClientDto {
 
 //    private List<DepositDto> deposits;
 
-//    private Form form;
+    private FormDto form;
 }
