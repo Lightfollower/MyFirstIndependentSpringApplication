@@ -6,6 +6,9 @@ import com.test.task.repositories.BankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class BankService {
     BankRepository bankRepository;
@@ -35,6 +38,28 @@ public class BankService {
         bankDto.setName(bank.getName());
         bankDto.setBIC(bank.getBIC());
 //        bankDto.setDeposits(depositService.getDtoListFromDepositList(bank.getDeposits()));
+        return bankDto;
+    }
+
+    public List<BankDto> findAll() {
+        List<Bank> banks = bankRepository.findAll();
+        return getDtoListFromBankList(banks);
+    }
+
+    private List<BankDto> getDtoListFromBankList(List<Bank> banks) {
+        List<BankDto> bankDtos = new ArrayList<>();
+        for (Bank bank :
+                banks) {
+            bankDtos.add(getBankDtoFromBank(bank/*, clientService.getDtoFromClient(deposit.getClient())*/));
+        }
+        return bankDtos;
+    }
+
+    private BankDto getBankDtoFromBank(Bank bank) {
+        BankDto bankDto = new BankDto();
+        bankDto.setId(bank.getId());
+        bankDto.setName(bank.getName());
+        bankDto.setBIC(bank.getBIC());
         return bankDto;
     }
 }
