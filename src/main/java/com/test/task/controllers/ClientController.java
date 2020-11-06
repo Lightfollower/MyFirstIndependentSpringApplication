@@ -54,10 +54,12 @@ public class ClientController {
     @GetMapping(produces = "application/json")
     public List<ClientDto> getClients(@RequestParam Map<String, String> requestParams/*, @RequestParam(name = "form", required = false) String form*/) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(PAGE_STRING, "0"));
+        //        Фильтрация клиентов по организационной форме.
         Form formFilter = null;
         if (requestParams.containsKey(FORM_STRING)) {
             formFilter = formService.getByName(requestParams.get(FORM_STRING));
         }
+//        Фильтрация клиентов по названию банка.
         Set<Long> clientsByBankName = null;
         if (requestParams.containsKey(BANK_NAME)) {
             clientsByBankName = getClientsByBank(requestParams.get(BANK_NAME));
@@ -86,7 +88,6 @@ public class ClientController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
-        System.out.println(id);
         clientService.deleteById(id);
     }
 
@@ -100,6 +101,7 @@ public class ClientController {
         return banks;
     }
 
+//    Возвращает Set с Id клиентов банка, название которого передаётся в параметр bankName.
     private Set<Long> getClientsByBank(String bankName) {
         Set<Long> clients = new HashSet<>();
         List<Deposit> deposits = bankService.getByName(bankName).getDeposits();
