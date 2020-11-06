@@ -66,8 +66,11 @@ public class ClientService {
     }
 
     public void deleteById(Long id){
-        System.out.println("ololo" + id);
         clientRepository.deleteById(id);
+    }
+
+    public Client getByName(String name){
+        return clientRepository.getByName(name);
     }
 
     public ClientDto getDtoFromClient(Client client) {

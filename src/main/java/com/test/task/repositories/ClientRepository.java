@@ -12,5 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long>, JpaSpecificationExecutor<Client> {
     Client getById(Long id);
+    Client getByName(String name);
     Page<ClientDto> findAllBy(Specification<Client> spec, Pageable pageable);
 }

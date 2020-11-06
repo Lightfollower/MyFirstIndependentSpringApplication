@@ -5,14 +5,16 @@ import com.test.task.entities.dtos.ClientDto;
 import com.test.task.entities.dtos.DepositDto;
 import com.test.task.repositories.DepositRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class DepositService {
+    private static final int PAGE_SIZE = 2;
     private ClientService clientService;
     private BankService bankService;
     private DepositRepository depositRepository;
@@ -32,14 +34,8 @@ public class DepositService {
         this.bankService = bankService;
     }
 
-    public List<DepositDto> findAll() {
-        List<Deposit> deposits = depositRepository.findAll();
-        System.out.println(deposits.size());
-        for (Deposit d :
-                deposits) {
-            System.out.println(d.getClient().getName());
-        }
-        ;
+    public List<DepositDto> findAll(Specification<Deposit> spec, int pageNumber) {
+        List<Deposit> deposits = depositRepository.findAll(spec, PageRequest.of(pageNumber, PAGE_SIZE)).getContent();
         return getDtoListFromDepositList(deposits);
     }
 
@@ -77,7 +73,6 @@ public class DepositService {
         depositDto.setTerm(deposit.getTerm());
         depositDto.setClient(clientDto);
         depositDto.setBank(bankService.getDtoFromBank(deposit.getBank()));
-        System.out.println("ololo " + depositDto.getClient().getName());
         return depositDto;
     }
 }
