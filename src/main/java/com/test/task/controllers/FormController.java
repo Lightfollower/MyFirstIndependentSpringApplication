@@ -1,6 +1,7 @@
 package com.test.task.controllers;
 
 import com.test.task.entities.Form;
+import com.test.task.entities.dtos.FormDto;
 import com.test.task.services.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,16 +19,12 @@ public class FormController {
     }
 
     @GetMapping
-    public List<Form> get(){
+    public List<FormDto> get(){
         return formService.findAll();
     }
 
     @PostMapping
     public void add(@RequestBody Form form){
-        System.out.println(form.getId() + "   " + form.getName());
-        System.out.println(form.getId() + "   " + form.getName());
-        System.out.println(form.getId() + "   " + form.getName());
-        System.out.println(form.getId() + "   " + form.getName());
         formService.addForm(new Form(form.getId(), form.getName()));
     }
 }

@@ -6,6 +6,7 @@ import com.test.task.repositories.FormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,6 +16,23 @@ public class FormService {
     @Autowired
     public FormService(FormRepository formRepository) {
         this.formRepository = formRepository;
+    }
+
+    public List<FormDto> findAll(){
+        List<FormDto> formDtos = new ArrayList<>();
+        List<Form> forms = formRepository.findAll();
+        for (Form f :
+                forms) {
+            formDtos.add(getDtoFromForm(f));
+        }
+        return formDtos;
+    }
+
+    private FormDto getDtoFromForm(Form f) {
+        FormDto formDto = new FormDto();
+        formDto.setId(f.getId());
+        formDto.setName(f.getName());
+        return formDto;
     }
 
     public Form getByName(String name){
@@ -44,9 +62,9 @@ public class FormService {
         formRepository.save(form);
     }
 
-    public List<Form> findAll() {
-        return formRepository.findAll();
-    }
+//    public List<Form> findAll() {
+//        return formRepository.findAll();
+//    }
 
     public FormDto getFormDtoFromForm(Form form) {
         FormDto formDto = new FormDto();
