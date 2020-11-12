@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/deposit")
+@RequestMapping("/api/v1/deposits")
 public class DepositController {
     private static final String CLIENT_STRING = "client";
     private static final String BANK_NAME = "bank";
@@ -48,6 +48,8 @@ public class DepositController {
         return depositService.findAll(depositFilter.getSpec(), pageNumber);
     }
 
+
+//    Достаточно указать id клиента и банка в теле запроса
     @PostMapping
     public DepositDto add(@RequestBody Deposit deposit){
         if (deposit.getId() != null) {
@@ -64,5 +66,10 @@ public class DepositController {
             throw new RuntimeException("Deposit id can't be null");
         }
         return depositService.saveOrUpdate(deposit);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id){
+        depositService.deleteById(id);
     }
 }

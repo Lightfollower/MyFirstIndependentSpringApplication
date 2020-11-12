@@ -47,6 +47,10 @@ public class DepositService {
         return depositRepository.getById(id);
     }
 
+    public void deleteById(Long id){
+        depositRepository.deleteById(id);
+    }
+
     public List<DepositDto> getDtoListFromDepositList(List<Deposit> deposits) {
         List<DepositDto> depositDtos = new ArrayList<>();
         for (Deposit deposit :
