@@ -49,6 +49,13 @@ public class BankController {
         return bankService.saveOrUpdate(bank);
     }
 
+    @PutMapping
+    public BankDto update(@RequestBody Bank bank) {
+        if (bank.getId() == null)
+            throw new RuntimeException("id can't be null");
+        return bankService.saveOrUpdate(bank);
+    }
+
     //    Возвращает Set с Id банков клиента, название которого передаётся в параметр clientName.
     private Set<Long> getBanksByClient(String clientName) {
         Set<Long> banks = new HashSet<>();
