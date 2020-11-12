@@ -4,6 +4,8 @@ import com.test.task.entities.Bank;
 import com.test.task.entities.dtos.BankDto;
 import com.test.task.repositories.BankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.List;
 
 @Service
 public class BankService {
+    private static final int PAGE_SIZE = 5;
     BankRepository bankRepository;
     DepositService depositService;
 
@@ -41,8 +44,8 @@ public class BankService {
         return bankDto;
     }
 
-    public List<BankDto> findAll() {
-        List<Bank> banks = bankRepository.findAll();
+    public List<BankDto> findAll(Specification<Bank> spec, int pageNumber) {
+        List<Bank> banks = bankRepository.findAll(spec, PageRequest.of(pageNumber, PAGE_SIZE)).getContent();
         return getDtoListFromBankList(banks);
     }
 
