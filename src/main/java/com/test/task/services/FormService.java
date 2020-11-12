@@ -49,17 +49,12 @@ public class FormService {
 
 
 
-    public void addForm(Form form){
-        System.out.println("ololo");
-        System.out.println("ololo");
-        System.out.println("ololo");
-        System.out.println("ololo");
-        System.out.println(form);
-        System.out.println(form);
-        System.out.println(form);
-        System.out.println(form);
-        System.out.println(form);
-        formRepository.save(form);
+    public FormDto saveOrUpdate(Form form){
+        return getFormDtoFromForm(formRepository.save(form));
+    }
+
+    public void deleteById(Long id){
+         formRepository.deleteById(id);
     }
 
 //    public List<Form> findAll() {

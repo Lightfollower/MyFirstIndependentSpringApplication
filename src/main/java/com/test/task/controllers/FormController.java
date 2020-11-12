@@ -24,7 +24,21 @@ public class FormController {
     }
 
     @PostMapping
-    public void add(@RequestBody Form form){
-        formService.addForm(new Form(form.getId(), form.getName()));
+    public FormDto addForm(@RequestBody Form form){
+        if(form.getId() == null)
+            form.setId(null);
+       return formService.saveOrUpdate(form);
+    }
+
+    @PutMapping
+    public FormDto updateForm(@RequestBody Form form){
+        if(form.getId() == null)
+            throw new RuntimeException("id can't be null");
+        return formService.saveOrUpdate(form);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id){
+        formService.deleteById(id);
     }
 }
