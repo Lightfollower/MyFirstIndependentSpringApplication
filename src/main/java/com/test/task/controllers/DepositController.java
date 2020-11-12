@@ -34,15 +34,17 @@ public class DepositController {
     @GetMapping
     public List<DepositDto> getDeposits(@RequestParam Map<String, String> requestParams){
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(PAGE_STRING, "0"));
-        Client clientFilter = null;
+        Client client = null;
+//        Список вкладов по имени клиента
         if (requestParams.containsKey(CLIENT_STRING)) {
-            clientFilter = clientService.getByName(requestParams.get(CLIENT_STRING));
+            client = clientService.getByName(requestParams.get(CLIENT_STRING));
         }
-        Bank bankFilter = null;
+        Bank bank = null;
+        //        Список вкладов по названию банка
         if (requestParams.containsKey(BANK_NAME)) {
-            bankFilter = bankService.getByName(requestParams.get(BANK_NAME));
+            bank = bankService.getByName(requestParams.get(BANK_NAME));
         }
-        DepositFilter depositFilter = new DepositFilter(clientFilter, bankFilter);
+        DepositFilter depositFilter = new DepositFilter(client, bank);
         return depositService.findAll(depositFilter.getSpec(), pageNumber);
     }
 
