@@ -15,7 +15,6 @@ public class ClientFilter {
 
     public ClientFilter(Map<String, String> requestParams, Form formFilter, Set<Long> clientSet) {
         this.spec = Specification.where(null);
-//        this.filterDefinition = new StringBuilder();
             if (requestParams.containsKey("address")) {
                 String address = requestParams.get("address");
                 spec = spec.and(ClientSpecifications.addressLike(address));
@@ -38,6 +37,8 @@ public class ClientFilter {
 //            if (bankFilter != null) {
 //                spec = spec.and(ClientSpecifications.bankIs(bankFilter));
 //            }
+
+        //        Фильтрация клиентов по названию банка.
         if (clientSet != null && !clientSet.isEmpty()) {
             Specification specClients = null;
             for (Long c : clientSet) {

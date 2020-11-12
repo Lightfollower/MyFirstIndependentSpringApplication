@@ -51,7 +51,9 @@ public class ClientSpecifications {
 //        };
 //    }
 
-    public static Specification<Client> sortByNameSpec(String direction) {
+
+    // Сортировки оставлю себе на память.
+   /* public static Specification<Client> sortByNameSpec(String direction) {
         return (Specification<Client>) (root, criteriaQuery, criteriaBuilder) -> {
             switch (direction) {
                 case "asc":
@@ -75,5 +77,5 @@ public class ClientSpecifications {
             }
             return criteriaBuilder.and();
         };
-    }
+    }*/
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ClientService {
@@ -80,7 +79,6 @@ public class ClientService {
         clientDto.setShortName(client.getShortName());
         clientDto.setAddress(client.getAddress());
         clientDto.setForm(formService.getFormDtoFromForm(client.getForm()));
-//        clientDto.setDeposits(depositService.getDtoListFromDepositList(client.getDeposits(), clientDto));
         return clientDto;
     }
 
