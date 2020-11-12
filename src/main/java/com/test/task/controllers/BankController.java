@@ -43,7 +43,10 @@ public class BankController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public void add(@RequestBody Bank bank) {
+    public BankDto add(@RequestBody Bank bank) {
+        if (bank.getId() != null)
+            bank.setId(null);
+        return bankService.saveOrUpdate(bank);
     }
 
     //    Возвращает Set с Id банков клиента, название которого передаётся в параметр clientName.

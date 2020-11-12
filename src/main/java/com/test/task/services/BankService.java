@@ -35,18 +35,15 @@ public class BankService {
         return bankRepository.getByName(name);
     }
 
-    public BankDto getDtoFromBank(Bank bank) {
-        BankDto bankDto = new BankDto();
-        bankDto.setId(bank.getId());
-        bankDto.setName(bank.getName());
-        bankDto.setBIC(bank.getBIC());
-//        bankDto.setDeposits(depositService.getDtoListFromDepositList(bank.getDeposits()));
-        return bankDto;
-    }
+
 
     public List<BankDto> findAll(Specification<Bank> spec, int pageNumber) {
         List<Bank> banks = bankRepository.findAll(spec, PageRequest.of(pageNumber, PAGE_SIZE)).getContent();
         return getDtoListFromBankList(banks);
+    }
+
+    public BankDto saveOrUpdate(Bank bank){
+        return getDtoFromBank(bankRepository.save(bank));
     }
 
     private List<BankDto> getDtoListFromBankList(List<Bank> banks) {
@@ -56,6 +53,15 @@ public class BankService {
             bankDtos.add(getBankDtoFromBank(bank/*, clientService.getDtoFromClient(deposit.getClient())*/));
         }
         return bankDtos;
+    }
+
+    public BankDto getDtoFromBank(Bank bank) {
+        BankDto bankDto = new BankDto();
+        bankDto.setId(bank.getId());
+        bankDto.setName(bank.getName());
+        bankDto.setBIC(bank.getBIC());
+//        bankDto.setDeposits(depositService.getDtoListFromDepositList(bank.getDeposits()));
+        return bankDto;
     }
 
     private BankDto getBankDtoFromBank(Bank bank) {
