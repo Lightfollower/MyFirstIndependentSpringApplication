@@ -60,6 +60,7 @@ public class DepositService {
         return depositDtos;
     }
 
+//    Метод на случай, если ClientDto будет содержать список вкладов
     public List<DepositDto> getDtoListFromDepositList(List<Deposit> deposits, ClientDto clientDto) {
         List<DepositDto> depositDtos = new ArrayList<>();
         for (Deposit deposit :
@@ -76,7 +77,7 @@ public class DepositService {
         depositDto.setRate(deposit.getRate());
         depositDto.setTerm(deposit.getTerm());
         depositDto.setClient(clientDto);
-        depositDto.setBank(bankService.getDtoFromBank(deposit.getBank()));
+        depositDto.setBank(bankService.getBankDtoFromBank(deposit.getBank()));
         return depositDto;
     }
 }

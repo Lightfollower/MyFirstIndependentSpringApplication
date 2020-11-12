@@ -31,7 +31,7 @@ public class BankService {
         return bankRepository.getById(id);
     }
 
-    public Bank getByName(String name){
+    public Bank getBankByName(String name){
         return bankRepository.getByName(name);
     }
 
@@ -43,28 +43,19 @@ public class BankService {
     }
 
     public BankDto saveOrUpdate(Bank bank){
-        return getDtoFromBank(bankRepository.save(bank));
+        return getBankDtoFromBank(bankRepository.save(bank));
     }
 
     private List<BankDto> getDtoListFromBankList(List<Bank> banks) {
         List<BankDto> bankDtos = new ArrayList<>();
         for (Bank bank :
                 banks) {
-            bankDtos.add(getBankDtoFromBank(bank/*, clientService.getDtoFromClient(deposit.getClient())*/));
+            bankDtos.add(getBankDtoFromBank(bank));
         }
         return bankDtos;
     }
 
-    public BankDto getDtoFromBank(Bank bank) {
-        BankDto bankDto = new BankDto();
-        bankDto.setId(bank.getId());
-        bankDto.setName(bank.getName());
-        bankDto.setBIC(bank.getBIC());
-//        bankDto.setDeposits(depositService.getDtoListFromDepositList(bank.getDeposits()));
-        return bankDto;
-    }
-
-    private BankDto getBankDtoFromBank(Bank bank) {
+    BankDto getBankDtoFromBank(Bank bank) {
         BankDto bankDto = new BankDto();
         bankDto.setId(bank.getId());
         bankDto.setName(bank.getName());

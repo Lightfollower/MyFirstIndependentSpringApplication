@@ -1,6 +1,5 @@
 package com.test.task.controllers;
 
-import com.test.task.entities.Bank;
 import com.test.task.entities.Client;
 import com.test.task.entities.Deposit;
 import com.test.task.entities.Form;
@@ -74,7 +73,7 @@ public class ClientController {
         if (client.getId() != null) {
             client.setId(null);
         }
-        client.setForm(formService.getOne(client.getForm().getId()));
+//        client.setForm(formService.getOne(client.getForm().getId()));
         return clientService.saveOrUpdateClient(client);
     }
 
@@ -91,20 +90,10 @@ public class ClientController {
         clientService.deleteById(id);
     }
 
-    private Set<Bank> getBanksOfClient(Long client) {
-        Set<Bank> banks = new HashSet<>();
-        List<Deposit> deposits = clientService.getClientById(client).getDeposits();
-        for (Deposit d :
-                deposits) {
-            banks.add(d.getBank());
-        }
-        return banks;
-    }
-
 //    Возвращает Set с Id клиентов банка, название которого передаётся в параметр bankName.
     private Set<Long> getClientsByBank(String bankName) {
         Set<Long> clients = new HashSet<>();
-        List<Deposit> deposits = bankService.getByName(bankName).getDeposits();
+        List<Deposit> deposits = bankService.getBankByName(bankName).getDeposits();
         for (Deposit d :
                 deposits) {
             clients.add(d.getClient().getId());

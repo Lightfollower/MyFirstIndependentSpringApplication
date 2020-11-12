@@ -42,7 +42,7 @@ public class DepositController {
         Bank bank = null;
         //        Список вкладов по названию банка
         if (requestParams.containsKey(BANK_NAME)) {
-            bank = bankService.getByName(requestParams.get(BANK_NAME));
+            bank = bankService.getBankByName(requestParams.get(BANK_NAME));
         }
         DepositFilter depositFilter = new DepositFilter(client, bank);
         return depositService.findAll(depositFilter.getSpec(), pageNumber);
