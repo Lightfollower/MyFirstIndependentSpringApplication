@@ -68,6 +68,11 @@ public class ClientController {
         return clientService.findAll(clientFilter.getSpec(), pageNumber, clientSorter.getSort());
     }
 
+    @GetMapping("/{id}")
+    public ClientDto getClient(@PathVariable Long id) {
+        return clientService.getClientDtoById(id);
+    }
+
     @PostMapping(consumes = "application/json")
     public ClientDto add(@RequestBody Client client) {
         if (client.getId() != null) {

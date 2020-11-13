@@ -60,8 +60,12 @@ public class ClientService {
         return getDtoFromClient(clientRepository.save(client));
     }
 
-    public Client getClientById(Long i) {
-        return clientRepository.getById(i);
+    public Client getClientById(Long id) {
+        return clientRepository.getById(id);
+    }
+
+    public ClientDto getClientDtoById(Long id) {
+        return getDtoFromClient(clientRepository.getById(id));
     }
 
     public void deleteById(Long id){
@@ -92,4 +96,6 @@ public class ClientService {
 //        client.setDeposits(depositService.getDepositListFromDepositDtoList(clientDto.getDeposits(), client));
         return client;
     }
+
+
 }
