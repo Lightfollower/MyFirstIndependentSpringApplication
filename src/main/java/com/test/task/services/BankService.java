@@ -46,6 +46,10 @@ public class BankService {
         return getBankDtoFromBank(bankRepository.save(bank));
     }
 
+    public void deleteById(Long id) {
+        bankRepository.deleteById(id);
+    }
+
     private List<BankDto> getDtoListFromBankList(List<Bank> banks) {
         List<BankDto> bankDtos = new ArrayList<>();
         for (Bank bank :
@@ -62,4 +66,6 @@ public class BankService {
         bankDto.setBIC(bank.getBIC());
         return bankDto;
     }
+
+
 }

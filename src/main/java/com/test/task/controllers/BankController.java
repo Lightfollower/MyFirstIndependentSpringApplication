@@ -56,6 +56,11 @@ public class BankController {
         return bankService.saveOrUpdate(bank);
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        bankService.deleteById(id);
+    }
+
     //    Возвращает Set с Id банков клиента, название которого передаётся в параметр clientName.
     private Set<Long> getBanksByClient(String clientName) {
         Set<Long> banks = new HashSet<>();
