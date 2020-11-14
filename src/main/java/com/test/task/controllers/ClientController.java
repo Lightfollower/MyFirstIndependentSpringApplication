@@ -4,12 +4,15 @@ import com.test.task.entities.Client;
 import com.test.task.entities.Deposit;
 import com.test.task.entities.Form;
 import com.test.task.entities.dtos.ClientDto;
+import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.services.FormService;
 import com.test.task.utils.ClientFilter;
 import com.test.task.utils.ClientSorter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -36,20 +39,6 @@ public class ClientController {
         this.bankService = bankService;
     }
 
-//    @GetMapping("ololo")
-//    public Set<Client> ololo(@RequestParam(name = "id") Long id) {
-//        return getClientsByBank(id);
-//    }
-
-//    @GetMapping("asd")
-//    public Client asd(){
-//        return clientService.saveNewClient(new Client("Хуй Хуев", "буй", "фыв"));
-//    }
-
-    //    @GetMapping
-//    public void ololo(@RequestParam Map<String, String> stringMap){
-//        stringMap.entrySet().forEach(System.out::println);
-//    }
     @GetMapping(produces = "application/json")
     public List<ClientDto> getClients(@RequestParam Map<String, String> requestParams/*, @RequestParam(name = "form", required = false) String form*/) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(PAGE_STRING, "0"));
@@ -69,8 +58,10 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ClientDto getClient(@PathVariable Long id) {
-        return clientService.getClientDtoById(id);
+    public ResponseEntity<?> getClient(@PathVariable Long id) {
+        if(!clientService.existsById(id))
+            throw new NonExistentIdException("No object with this id");
+        return new ResponseEntity<>(clientService.getClientDtoById(id), HttpStatus.OK);
     }
 
     @PostMapping(consumes = "application/json")
@@ -104,5 +95,15 @@ public class ClientController {
             clients.add(d.getClient().getId());
         }
         return clients;
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleIdException(NonExistentIdException exc) {
+        return new ResponseEntity<>(exc.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleSomeException(RuntimeException exc) {
+        return new ResponseEntity<>(exc.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -64,17 +64,22 @@ public class ClientService {
         return clientRepository.getById(id);
     }
 
+    public Client getByName(String name){
+        return clientRepository.getByName(name);
+    }
+
     public ClientDto getClientDtoById(Long id) {
         return getDtoFromClient(clientRepository.getById(id));
+    }
+
+    public boolean existsById(Long id) {
+        return clientRepository.existsById(id);
     }
 
     public void deleteById(Long id){
         clientRepository.deleteById(id);
     }
 
-    public Client getByName(String name){
-        return clientRepository.getByName(name);
-    }
 
     public ClientDto getDtoFromClient(Client client) {
         ClientDto clientDto = new ClientDto();
