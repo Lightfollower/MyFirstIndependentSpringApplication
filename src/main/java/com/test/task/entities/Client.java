@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -24,6 +25,7 @@ public class Client {
     @Column(name = "shortname_fld")
     private String shortName;
 
+    @NotNull
     @Column(name = "address_fld")
     private String address;
 

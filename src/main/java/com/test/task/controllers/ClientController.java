@@ -13,6 +13,7 @@ import com.test.task.utils.ClientSorter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -65,7 +66,7 @@ public class ClientController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ClientDto add(@RequestBody Client client) {
+    public ClientDto add(@RequestBody @Validated Client client) {
         if (client.getId() != null) {
             client.setId(null);
         }
