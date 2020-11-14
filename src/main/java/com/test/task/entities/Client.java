@@ -19,9 +19,11 @@ public class Client {
     @Column(name = "client_id")
     private Long id;
 
+    @NotNull
     @Column(name = "name_fld")
     private String name;
 
+    @NotNull
     @Column(name = "shortname_fld")
     private String shortName;
 

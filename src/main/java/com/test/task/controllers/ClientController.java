@@ -4,6 +4,8 @@ import com.test.task.entities.Client;
 import com.test.task.entities.Deposit;
 import com.test.task.entities.Form;
 import com.test.task.entities.dtos.ClientDto;
+import com.test.task.exceptions.BadEntityException;
+import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
@@ -13,6 +15,7 @@ import com.test.task.utils.ClientSorter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,35 +62,39 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getClient(@PathVariable Long id) {
-        if(!clientService.existsById(id))
+    public ResponseEntity<?> getClientById(@PathVariable Long id) {
+        if (!clientService.existsById(id))
             throw new NonExistentIdException("No object with this id");
         return new ResponseEntity<>(clientService.getClientDtoById(id), HttpStatus.OK);
     }
 
     @PostMapping(consumes = "application/json")
-    public ClientDto add(@RequestBody @Validated Client client) {
+    public ResponseEntity<?> add(@RequestBody @Validated Client client, BindingResult bindingResult) {
         if (client.getId() != null) {
             client.setId(null);
         }
-//        client.setForm(formService.getOne(client.getForm().getId()));
-        return clientService.saveOrUpdateClient(client);
+        if (bindingResult.hasErrors())
+            throw new BadEntityException("All fields must be filled");
+        if (client.getForm() == null) {
+            throw new BadEntityException("Choose an organizational form");
+        }
+        return new ResponseEntity<>(clientService.saveOrUpdateClient(client), HttpStatus.OK);
     }
 
     @PutMapping(consumes = "application/json")
-    public ClientDto modify(@RequestBody Client client){
-        if(client.getId() == null){
+    public ClientDto modifyClient(@RequestBody Client client) {
+        if (client.getId() == null) {
             throw new RuntimeException("client id can't be null");
         }
         return clientService.saveOrUpdateClient(client);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         clientService.deleteById(id);
     }
 
-//    Возвращает Set с Id клиентов банка, название которого передаётся в параметр bankName.
+    //    Возвращает Set с Id клиентов банка, название которого передаётся в параметр bankName.
     private Set<Long> getClientsByBank(String bankName) {
         Set<Long> clients = new HashSet<>();
         List<Deposit> deposits = bankService.getBankByName(bankName).getDeposits();
@@ -98,7 +105,7 @@ public class ClientController {
         return clients;
     }
 
-    @ExceptionHandler
+  @ExceptionHandler
     public ResponseEntity<?> handleIdException(NonExistentIdException exc) {
         return new ResponseEntity<>(exc.getMessage(), HttpStatus.NOT_FOUND);
     }
@@ -106,5 +113,10 @@ public class ClientController {
     @ExceptionHandler
     public ResponseEntity<?> handleSomeException(RuntimeException exc) {
         return new ResponseEntity<>(exc.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleBadEntityException(MalformedEntityException exc) {
+        return new ResponseEntity<>(exc.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
