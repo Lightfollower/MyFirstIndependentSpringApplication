@@ -6,6 +6,8 @@ import com.test.task.services.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,14 +28,14 @@ public class FormController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addForm(@RequestBody Form form){
+    public ResponseEntity<?> addForm(@RequestBody @Validated Form form, BindingResult bindingResult){
         if(form.getId() == null)
             form.setId(null);
        return new ResponseEntity<>(formService.saveOrUpdate(form), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateForm(@RequestBody Form form){
+    public ResponseEntity<?> updateForm(@RequestBody @Validated Form form, BindingResult bindingResult){
         if(form.getId() == null)
             throw new RuntimeException("id can't be null");
         return new ResponseEntity<>(formService.saveOrUpdate(form), HttpStatus.OK);

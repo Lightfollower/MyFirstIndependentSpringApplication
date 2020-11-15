@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "forms")
@@ -15,6 +16,7 @@ public class Form {
     @Column(name = "form_id")
     private Long id;
 
+    @NotNull
     @Column(name = "name_fld")
     private String name;
 
