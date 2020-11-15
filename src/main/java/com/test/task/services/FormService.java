@@ -53,6 +53,10 @@ public class FormService {
         return getFormDtoFromForm(formRepository.save(form));
     }
 
+    public boolean existsById(Long id) {
+        return formRepository.existsById(id);
+    }
+
     public void deleteById(Long id){
          formRepository.deleteById(id);
     }
