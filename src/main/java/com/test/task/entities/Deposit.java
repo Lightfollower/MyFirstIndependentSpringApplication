@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.util.List;
 
@@ -18,12 +19,15 @@ public class Deposit {
     @Column(name = "deposit_id")
     private Long id;
 
+    @NotNull
     @Column(name = "date_fld")
     private Date date;
 
+    @NotNull
     @Column(name = "rate_fld")
     private Double rate;
 
+    @NotNull
     @Column(name = "term_fld")
     private int term;
 
