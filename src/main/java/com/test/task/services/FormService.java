@@ -40,7 +40,7 @@ public class FormService {
     }
 
     public FormDto getFormDtoById(Long id){
-        return formRepository.getById(id);
+        return getFormDtoFromForm(formRepository.getOne(id));
     }
 
     public Form getFormById(Long id) {

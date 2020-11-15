@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FormRepository extends JpaRepository<Form, Long>{
     Form getByName(String name);
-    FormDto getById(Long id);
 }
