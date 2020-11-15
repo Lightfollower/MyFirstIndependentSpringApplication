@@ -8,6 +8,8 @@ import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.utils.BankFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -43,22 +45,23 @@ public class BankController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public BankDto add(@RequestBody Bank bank) {
+    public ResponseEntity<?> add(@RequestBody Bank bank) {
         if (bank.getId() != null)
             bank.setId(null);
-        return bankService.saveOrUpdate(bank);
+        return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
     }
 
     @PutMapping
-    public BankDto update(@RequestBody Bank bank) {
+    public ResponseEntity<?> update(@RequestBody Bank bank) {
         if (bank.getId() == null)
             throw new RuntimeException("id can't be null");
-        return bankService.saveOrUpdate(bank);
+        return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         bankService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //    Возвращает Set с Id банков клиента, название которого передаётся в параметр clientName.
@@ -71,6 +74,4 @@ public class BankController {
         }
         return banks;
     }
-
-
 }
