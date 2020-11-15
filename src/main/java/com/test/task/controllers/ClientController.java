@@ -73,7 +73,7 @@ public class ClientController {
         if (client.getId() != null) {
             client.setId(null);
         }
-        if(clientService.existsByName(client.getName()))
+        if (clientService.existsByName(client.getName()))
             throw new MalformedEntityException("This name is busy");
         if (bindingResult.hasErrors())
             throw new MalformedEntityException("All fields must be filled");
@@ -86,8 +86,13 @@ public class ClientController {
     public ResponseEntity<?> modifyClient(@RequestBody @Validated Client client, BindingResult bindingResult) {
         if (client.getId() == null)
             throw new NullIdException("client id can't be null");
-        if(!clientService.existsById(client.getId()))
+        if (!clientService.existsById(client.getId()))
             throw new nonExistentIdException("No object with this id");
+//        Если имена, старое и новое, не совпадают, тогда делается проверка на уникальность имени по базе.
+        if (!clientService.getClientById(client.getId()).getName().equals(client.getName()))
+//            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность
+            if (clientService.existsByName(client.getName()))
+                throw new MalformedEntityException("This name is busy");
         if (bindingResult.hasErrors())
             throw new MalformedEntityException("All fields must be filled");
         if (client.getForm() == null)
@@ -97,7 +102,7 @@ public class ClientController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        if(!clientService.existsById(id))
+        if (!clientService.existsById(id))
             throw new nonExistentIdException("No object with this id");
         clientService.deleteById(id);
     }
