@@ -1,7 +1,7 @@
 package com.test.task.exceptions;
 
-public class NonExistentIdException extends RuntimeException{
-    public NonExistentIdException(String message) {
+public class nonExistentIdException extends RuntimeException{
+    public nonExistentIdException(String message) {
         super(message);
     }
 }

@@ -5,7 +5,8 @@ import com.test.task.entities.Deposit;
 import com.test.task.entities.Form;
 import com.test.task.entities.dtos.ClientDto;
 import com.test.task.exceptions.MalformedEntityException;
-import com.test.task.exceptions.NonExistentIdException;
+import com.test.task.exceptions.NullIdException;
+import com.test.task.exceptions.nonExistentIdException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.services.FormService;
@@ -63,7 +64,7 @@ public class ClientController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getClientById(@PathVariable Long id) {
         if (!clientService.existsById(id))
-            throw new NonExistentIdException("No object with this id");
+            throw new nonExistentIdException("No object with this id");
         return new ResponseEntity<>(clientService.getClientDtoById(id), HttpStatus.OK);
     }
 
@@ -74,23 +75,30 @@ public class ClientController {
         }
         if (bindingResult.hasErrors())
             throw new MalformedEntityException("All fields must be filled");
-        if (client.getForm() == null) {
+        if (client.getForm() == null)
             throw new MalformedEntityException("Choose an organizational form");
-        }
         return new ResponseEntity<>(clientService.saveOrUpdateClient(client), HttpStatus.OK);
     }
 
     @PutMapping(consumes = "application/json")
-    public ClientDto modifyClient(@RequestBody Client client) {
-        if (client.getId() == null) {
-            throw new RuntimeException("client id can't be null");
-        }
-        return clientService.saveOrUpdateClient(client);
+    public ResponseEntity<?> modifyClient(@RequestBody @Validated Client client, BindingResult bindingResult) {
+        if (client.getId() == null)
+            throw new NullIdException("client id can't be null");
+        if(!clientService.existsById(client.getId()))
+            throw new nonExistentIdException("No object with this id");
+        if (bindingResult.hasErrors())
+            throw new MalformedEntityException("All fields must be filled");
+        if (client.getForm() == null)
+            throw new MalformedEntityException("Choose an organizational form");
+        return new ResponseEntity<>(clientService.saveOrUpdateClient(client), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        if(!clientService.existsById(id))
+            throw new nonExistentIdException("No object with this id");
         clientService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //    Возвращает Set с Id клиентов банка, название которого передаётся в параметр bankName.
@@ -104,8 +112,8 @@ public class ClientController {
         return clients;
     }
 
-  @ExceptionHandler
-    public ResponseEntity<?> handleIdException(NonExistentIdException exc) {
+    @ExceptionHandler
+    public ResponseEntity<?> handleIdException(nonExistentIdException exc) {
         return new ResponseEntity<>(exc.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -116,6 +124,11 @@ public class ClientController {
 
     @ExceptionHandler
     public ResponseEntity<?> handleBadEntityException(MalformedEntityException exc) {
+        return new ResponseEntity<>(exc.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleNullIdException(NullIdException exc) {
         return new ResponseEntity<>(exc.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
