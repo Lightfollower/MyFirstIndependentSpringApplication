@@ -9,6 +9,8 @@ import com.test.task.services.ClientService;
 import com.test.task.services.DepositService;
 import com.test.task.utils.DepositFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,25 +53,26 @@ public class DepositController {
 
 //    Достаточно указать id клиента и банка в теле запроса
     @PostMapping
-    public DepositDto add(@RequestBody Deposit deposit){
+    public ResponseEntity<?> add(@RequestBody Deposit deposit){
         if (deposit.getId() != null) {
             deposit.setId(null);
         }
         deposit.setClient(clientService.getClientById(deposit.getClient().getId()));
         deposit.setBank(bankService.getBankById(deposit.getBank().getId()));
-        return depositService.saveOrUpdate(deposit);
+        return new ResponseEntity<>(depositService.saveOrUpdate(deposit), HttpStatus.OK);
     }
 
     @PutMapping
-    public DepositDto modify(@RequestBody Deposit deposit){
+    public ResponseEntity<?> modify(@RequestBody Deposit deposit){
         if (deposit.getId() == null) {
             throw new RuntimeException("Deposit id can't be null");
         }
-        return depositService.saveOrUpdate(deposit);
+        return new ResponseEntity<>(depositService.saveOrUpdate(deposit),HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long id){
         depositService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
