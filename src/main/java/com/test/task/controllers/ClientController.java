@@ -94,11 +94,10 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         if(!clientService.existsById(id))
             throw new nonExistentIdException("No object with this id");
         clientService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //    Возвращает Set с Id клиентов банка, название которого передаётся в параметр bankName.
