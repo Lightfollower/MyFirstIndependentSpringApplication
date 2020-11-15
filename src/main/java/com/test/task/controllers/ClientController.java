@@ -4,7 +4,6 @@ import com.test.task.entities.Client;
 import com.test.task.entities.Deposit;
 import com.test.task.entities.Form;
 import com.test.task.entities.dtos.ClientDto;
-import com.test.task.exceptions.BadEntityException;
 import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.services.BankService;
@@ -74,9 +73,9 @@ public class ClientController {
             client.setId(null);
         }
         if (bindingResult.hasErrors())
-            throw new BadEntityException("All fields must be filled");
+            throw new MalformedEntityException("All fields must be filled");
         if (client.getForm() == null) {
-            throw new BadEntityException("Choose an organizational form");
+            throw new MalformedEntityException("Choose an organizational form");
         }
         return new ResponseEntity<>(clientService.saveOrUpdateClient(client), HttpStatus.OK);
     }

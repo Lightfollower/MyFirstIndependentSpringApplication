@@ -39,11 +39,11 @@ public class FormService {
         return formRepository.getByName(name);
     }
 
-    public FormDto getFormById(Long id){
+    public FormDto getFormDtoById(Long id){
         return formRepository.getById(id);
     }
 
-    public Form getOne(Long id) {
+    public Form getFormById(Long id) {
         return formRepository.getOne(id);
     }
 
