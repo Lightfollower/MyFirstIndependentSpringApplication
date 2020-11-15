@@ -6,7 +6,7 @@ import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.exceptions.NullIdException;
 import com.test.task.exceptions.nonExistentIdException;
 import com.test.task.services.FormService;
-import com.test.task.utils.StringConstants;
+import com.test.task.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +52,7 @@ public class FormController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
         if (!formService.existsById(id))
-            throw new nonExistentIdException(StringConstants.noObjectWithThisId);
+            throw new nonExistentIdException(Constants.noObjectWithThisId);
         formService.deleteById(id);
     }
 }

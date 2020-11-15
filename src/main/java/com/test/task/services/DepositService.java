@@ -4,6 +4,7 @@ import com.test.task.entities.Deposit;
 import com.test.task.entities.dtos.ClientDto;
 import com.test.task.entities.dtos.DepositDto;
 import com.test.task.repositories.DepositRepository;
+import com.test.task.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,7 +15,6 @@ import java.util.List;
 
 @Service
 public class DepositService {
-    private static final int PAGE_SIZE = 2;
     private ClientService clientService;
     private BankService bankService;
     private DepositRepository depositRepository;
@@ -35,7 +35,7 @@ public class DepositService {
     }
 
     public List<DepositDto> findAll(Specification<Deposit> spec, int pageNumber) {
-        List<Deposit> deposits = depositRepository.findAll(spec, PageRequest.of(pageNumber, PAGE_SIZE)).getContent();
+        List<Deposit> deposits = depositRepository.findAll(spec, PageRequest.of(pageNumber, Constants.PAGE_SIZE)).getContent();
         return getDtoListFromDepositList(deposits);
     }
 
