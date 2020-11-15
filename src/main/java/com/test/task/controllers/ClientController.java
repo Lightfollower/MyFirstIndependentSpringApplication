@@ -117,24 +117,4 @@ public class ClientController {
         }
         return clients;
     }
-
-    @ExceptionHandler
-    public ResponseEntity<?> handleIdException(nonExistentIdException exc) {
-        return new ResponseEntity<>(exc.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> handleSomeException(RuntimeException exc) {
-        return new ResponseEntity<>(exc.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> handleBadEntityException(MalformedEntityException exc) {
-        return new ResponseEntity<>(exc.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> handleNullIdException(NullIdException exc) {
-        return new ResponseEntity<>(exc.getMessage(), HttpStatus.BAD_REQUEST);
-    }
 }
