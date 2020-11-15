@@ -9,7 +9,7 @@ import com.test.task.exceptions.nonExistentIdException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.utils.BankFilter;
-import com.test.task.utils.StringConstants;
+import com.test.task.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,11 +36,11 @@ public class BankController {
 
     @GetMapping
     public List<BankDto> getBanks(@RequestParam Map<String, String> requestParams) {
-        int pageNumber = Integer.parseInt(requestParams.getOrDefault(StringConstants.PAGE_STRING, "0"));
+        int pageNumber = Integer.parseInt(requestParams.getOrDefault(Constants.PAGE_STRING, "0"));
         Set<Long> banksByClientName = null;
         // Фильтрация банков по имени клиента
-        if (requestParams.containsKey(StringConstants.CLIENT_NAME)) {
-            banksByClientName = getBanksByClient(requestParams.get(StringConstants.CLIENT_NAME));
+        if (requestParams.containsKey(Constants.CLIENT_NAME)) {
+            banksByClientName = getBanksByClient(requestParams.get(Constants.CLIENT_NAME));
         }
         BankFilter bankFilter = new BankFilter(banksByClientName);
 
@@ -52,7 +52,7 @@ public class BankController {
         if (bank.getId() != null)
             bank.setId(null);
         if (bankService.existsByName(bank.getName()))
-            throw new MalformedEntityException(String.format(StringConstants.nameIsBusy, bank.getName()));
+            throw new MalformedEntityException(String.format(Constants.nameIsBusy, bank.getName()));
         if (bindingResult.hasErrors())
             throw new MalformedEntityException();
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
@@ -66,16 +66,17 @@ public class BankController {
         if (!bankService.getBankById(bank.getId()).getName().equals(bank .getName()))
 //            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность
             if (bankService.existsByName(bank.getName()))
-                throw new MalformedEntityException(String.format(StringConstants.nameIsBusy, bank.getName()));
+                throw new MalformedEntityException(String.format(Constants.nameIsBusy, bank.getName()));
         if (bindingResult.hasErrors())
             throw new MalformedEntityException();
+        bank.setDeposits(bankService.getBankById(bank.getId()).getDeposits());
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         if (!bankService.existsById(id))
-            throw new nonExistentIdException(StringConstants.noObjectWithThisId);
+            throw new nonExistentIdException(Constants.noObjectWithThisId);
         bankService.deleteById(id);
     }
 
