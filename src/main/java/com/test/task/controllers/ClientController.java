@@ -12,6 +12,7 @@ import com.test.task.services.ClientService;
 import com.test.task.services.FormService;
 import com.test.task.utils.ClientFilter;
 import com.test.task.utils.ClientSorter;
+import com.test.task.utils.StringConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +30,7 @@ import java.util.Set;
 @RequestMapping("/api/v1/clients")
 //@Api("Set of endpoints for CRUD operations for Products")
 public class ClientController {
-    private static final String PAGE_STRING = "page";
-    private static final String FORM_STRING = "form";
-    private static final String BANK_NAME = "bank";
+
     private ClientService clientService;
     private FormService formService;
     private BankService bankService;
@@ -45,16 +44,16 @@ public class ClientController {
 
     @GetMapping(produces = "application/json")
     public List<ClientDto> getClients(@RequestParam Map<String, String> requestParams/*, @RequestParam(name = "form", required = false) String form*/) {
-        int pageNumber = Integer.parseInt(requestParams.getOrDefault(PAGE_STRING, "0"));
+        int pageNumber = Integer.parseInt(requestParams.getOrDefault(StringConstants.PAGE_STRING, "0"));
         //        Фильтрация клиентов по организационной форме.
         Form formFilter = null;
-        if (requestParams.containsKey(FORM_STRING)) {
-            formFilter = formService.getByName(requestParams.get(FORM_STRING));
+        if (requestParams.containsKey(StringConstants.FORM_STRING)) {
+            formFilter = formService.getByName(requestParams.get(StringConstants.FORM_STRING));
         }
 //        Фильтрация клиентов по названию банка.
         Set<Long> clientsByBankName = null;
-        if (requestParams.containsKey(BANK_NAME)) {
-            clientsByBankName = getClientsByBank(requestParams.get(BANK_NAME));
+        if (requestParams.containsKey(StringConstants.BANK_NAME)) {
+            clientsByBankName = getClientsByBank(requestParams.get(StringConstants.BANK_NAME));
         }
         ClientFilter clientFilter = new ClientFilter(requestParams, formFilter, clientsByBankName);
         ClientSorter clientSorter = new ClientSorter(requestParams);
@@ -64,7 +63,7 @@ public class ClientController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getClientById(@PathVariable Long id) {
         if (!clientService.existsById(id))
-            throw new nonExistentIdException("No object with this id");
+            throw new nonExistentIdException(StringConstants.noObjectWithThisId);
         return new ResponseEntity<>(clientService.getClientDtoById(id), HttpStatus.OK);
     }
 
@@ -74,7 +73,7 @@ public class ClientController {
             client.setId(null);
         }
         if (clientService.existsByName(client.getName()))
-            throw new MalformedEntityException(String.format("name %s is busy", client.getName()));
+            throw new MalformedEntityException(String.format(StringConstants.nameIsBusy, client.getName()));
         if (bindingResult.hasErrors())
             throw new MalformedEntityException();
         if (client.getForm() == null)
@@ -87,12 +86,12 @@ public class ClientController {
         if (client.getId() == null)
             throw new NullIdException();
         if (!clientService.existsById(client.getId()))
-            throw new nonExistentIdException("No object with this id");
+            throw new nonExistentIdException(StringConstants.noObjectWithThisId);
 //        Если имена, старое и новое, не совпадают, тогда делается проверка на уникальность имени по базе.
         if (!clientService.getClientById(client.getId()).getName().equals(client.getName()))
 //            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность
             if (clientService.existsByName(client.getName()))
-                throw new MalformedEntityException(String.format("name %s is busy", client.getName()));
+                throw new MalformedEntityException(String.format(StringConstants.nameIsBusy, client.getName()));
         if (bindingResult.hasErrors())
             throw new MalformedEntityException();
         if (client.getForm() == null)
@@ -103,7 +102,7 @@ public class ClientController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         if (!clientService.existsById(id))
-            throw new nonExistentIdException("No object with this id");
+            throw new nonExistentIdException(StringConstants.noObjectWithThisId);
         clientService.deleteById(id);
     }
 

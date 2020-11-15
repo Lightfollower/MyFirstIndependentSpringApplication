@@ -9,6 +9,7 @@ import com.test.task.exceptions.nonExistentIdException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.utils.BankFilter;
+import com.test.task.utils.StringConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,6 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/v1/banks")
 public class BankController {
-    private static final String PAGE_STRING = "page";
-    private static final String CLIENT_NAME = "client";
     BankService bankService;
     ClientService clientService;
 
@@ -37,11 +36,11 @@ public class BankController {
 
     @GetMapping
     public List<BankDto> getBanks(@RequestParam Map<String, String> requestParams) {
-        int pageNumber = Integer.parseInt(requestParams.getOrDefault(PAGE_STRING, "0"));
+        int pageNumber = Integer.parseInt(requestParams.getOrDefault(StringConstants.PAGE_STRING, "0"));
         Set<Long> banksByClientName = null;
         // Фильтрация банков по имени клиента
-        if (requestParams.containsKey(CLIENT_NAME)) {
-            banksByClientName = getBanksByClient(requestParams.get(CLIENT_NAME));
+        if (requestParams.containsKey(StringConstants.CLIENT_NAME)) {
+            banksByClientName = getBanksByClient(requestParams.get(StringConstants.CLIENT_NAME));
         }
         BankFilter bankFilter = new BankFilter(banksByClientName);
 
@@ -53,7 +52,7 @@ public class BankController {
         if (bank.getId() != null)
             bank.setId(null);
         if (bankService.existsByName(bank.getName()))
-            throw new MalformedEntityException(String.format("name %s is busy", bank.getName()));
+            throw new MalformedEntityException(String.format(StringConstants.nameIsBusy, bank.getName()));
         if (bindingResult.hasErrors())
             throw new MalformedEntityException();
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
@@ -67,7 +66,7 @@ public class BankController {
         if (!bankService.getBankById(bank.getId()).getName().equals(bank .getName()))
 //            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность
             if (bankService.existsByName(bank.getName()))
-                throw new MalformedEntityException(String.format("name %s is busy", bank.getName()));
+                throw new MalformedEntityException(String.format(StringConstants.nameIsBusy, bank.getName()));
         if (bindingResult.hasErrors())
             throw new MalformedEntityException();
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
@@ -76,7 +75,7 @@ public class BankController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         if (!bankService.existsById(id))
-            throw new nonExistentIdException("No object with this id");
+            throw new nonExistentIdException(StringConstants.noObjectWithThisId);
         bankService.deleteById(id);
     }
 
