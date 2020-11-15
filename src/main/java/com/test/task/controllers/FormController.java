@@ -36,7 +36,7 @@ public class FormController {
         if(form.getId() == null)
             form.setId(null);
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException();
+            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
        return new ResponseEntity<>(formService.saveOrUpdate(form), HttpStatus.OK);
     }
 
@@ -45,7 +45,7 @@ public class FormController {
         if(form.getId() == null)
             throw new NullIdException();
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException();
+            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
         return new ResponseEntity<>(formService.saveOrUpdate(form), HttpStatus.OK);
     }
 

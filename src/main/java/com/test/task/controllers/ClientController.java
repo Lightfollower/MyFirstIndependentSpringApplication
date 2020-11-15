@@ -75,7 +75,7 @@ public class ClientController {
         if (clientService.existsByName(client.getName()))
             throw new MalformedEntityException(String.format(Constants.nameIsBusy, client.getName()));
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException();
+            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
         if (client.getForm() == null)
             throw new MalformedEntityException("Choose an organizational form");
         return new ResponseEntity<>(clientService.saveOrUpdateClient(client), HttpStatus.OK);
@@ -93,7 +93,7 @@ public class ClientController {
             if (clientService.existsByName(client.getName()))
                 throw new MalformedEntityException(String.format(Constants.nameIsBusy, client.getName()));
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException();
+            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
         if (client.getForm() == null)
             throw new MalformedEntityException("Choose an organizational form");
         client.setDeposits(clientService.getClientById(client.getId()).getDeposits());

@@ -54,7 +54,7 @@ public class BankController {
         if (bankService.existsByName(bank.getName()))
             throw new MalformedEntityException(String.format(Constants.nameIsBusy, bank.getName()));
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException();
+            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
     }
 
@@ -68,7 +68,7 @@ public class BankController {
             if (bankService.existsByName(bank.getName()))
                 throw new MalformedEntityException(String.format(Constants.nameIsBusy, bank.getName()));
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException();
+            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
         bank.setDeposits(bankService.getBankById(bank.getId()).getDeposits());
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
     }
