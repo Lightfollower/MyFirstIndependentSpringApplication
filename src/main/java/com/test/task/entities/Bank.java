@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -16,9 +17,11 @@ public class Bank {
     @Column(name = "bank_id")
     private Long id;
 
+    @NotNull
     @Column(name = "name_fld")
     private String name;
 
+    @NotNull
     @Column
     private String BIC;
 

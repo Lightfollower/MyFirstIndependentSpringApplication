@@ -10,6 +10,8 @@ import com.test.task.utils.BankFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -45,14 +47,14 @@ public class BankController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> add(@RequestBody Bank bank) {
+    public ResponseEntity<?> add(@RequestBody @Validated Bank bank, BindingResult bindingResult) {
         if (bank.getId() != null)
             bank.setId(null);
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody Bank bank) {
+    public ResponseEntity<?> update(@RequestBody @Validated Bank bank, BindingResult bindingResult) {
         if (bank.getId() == null)
             throw new RuntimeException("id can't be null");
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
