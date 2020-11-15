@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface BankRepository extends JpaRepository<Bank, Long>, JpaSpecificationExecutor<Bank> {
     Bank getByName(String name);
     Bank getById(Long id);
+    boolean existsByName(String name);
 }

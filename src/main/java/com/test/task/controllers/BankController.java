@@ -1,9 +1,11 @@
 package com.test.task.controllers;
 
 import com.test.task.entities.Bank;
-import com.test.task.entities.Client;
 import com.test.task.entities.Deposit;
 import com.test.task.entities.dtos.BankDto;
+import com.test.task.exceptions.MalformedEntityException;
+import com.test.task.exceptions.NullIdException;
+import com.test.task.exceptions.nonExistentIdException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.utils.BankFilter;
@@ -50,20 +52,32 @@ public class BankController {
     public ResponseEntity<?> add(@RequestBody @Validated Bank bank, BindingResult bindingResult) {
         if (bank.getId() != null)
             bank.setId(null);
+        if (bankService.existsByName(bank.getName()))
+            throw new MalformedEntityException(String.format("name %s is busy", bank.getName()));
+        if (bindingResult.hasErrors())
+            throw new MalformedEntityException();
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody @Validated Bank bank, BindingResult bindingResult) {
         if (bank.getId() == null)
-            throw new RuntimeException("id can't be null");
+            throw new NullIdException();
+        //        Если имена, старое и новое, не совпадают, тогда делается проверка на уникальность имени по базе.
+        if (!bankService.getBankById(bank.getId()).getName().equals(bank .getName()))
+//            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность
+            if (bankService.existsByName(bank.getName()))
+                throw new MalformedEntityException(String.format("name %s is busy", bank.getName()));
+        if (bindingResult.hasErrors())
+            throw new MalformedEntityException();
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
+        if (!bankService.existsById(id))
+            throw new nonExistentIdException("No object with this id");
         bankService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //    Возвращает Set с Id банков клиента, название которого передаётся в параметр clientName.

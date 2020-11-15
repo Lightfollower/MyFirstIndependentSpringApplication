@@ -46,6 +46,14 @@ public class BankService {
         return getBankDtoFromBank(bankRepository.save(bank));
     }
 
+    public boolean existsById(Long id) {
+        return bankRepository.existsById(id);
+    }
+
+    public boolean existsByName(String name) {
+        return bankRepository.existsByName(name);
+    }
+
     public void deleteById(Long id) {
         bankRepository.deleteById(id);
     }
@@ -66,6 +74,7 @@ public class BankService {
         bankDto.setBIC(bank.getBIC());
         return bankDto;
     }
+
 
 
 }
