@@ -74,9 +74,9 @@ public class ClientController {
             client.setId(null);
         }
         if (clientService.existsByName(client.getName()))
-            throw new MalformedEntityException("This name is busy");
+            throw new MalformedEntityException(String.format("name %s is busy", client.getName()));
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException("All fields must be filled");
+            throw new MalformedEntityException();
         if (client.getForm() == null)
             throw new MalformedEntityException("Choose an organizational form");
         return new ResponseEntity<>(clientService.saveOrUpdateClient(client), HttpStatus.OK);
@@ -92,9 +92,9 @@ public class ClientController {
         if (!clientService.getClientById(client.getId()).getName().equals(client.getName()))
 //            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность
             if (clientService.existsByName(client.getName()))
-                throw new MalformedEntityException("This name is busy");
+                throw new MalformedEntityException(String.format("name %s is busy", client.getName()));
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException("All fields must be filled");
+            throw new MalformedEntityException();
         if (client.getForm() == null)
             throw new MalformedEntityException("Choose an organizational form");
         return new ResponseEntity<>(clientService.saveOrUpdateClient(client), HttpStatus.OK);
