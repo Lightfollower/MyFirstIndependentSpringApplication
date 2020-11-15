@@ -30,7 +30,6 @@ import java.util.Set;
 @RequestMapping("/api/v1/clients")
 //@Api("Set of endpoints for CRUD operations for Products")
 public class ClientController {
-
     private ClientService clientService;
     private FormService formService;
     private BankService bankService;

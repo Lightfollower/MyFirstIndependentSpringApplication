@@ -24,9 +24,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/deposits")
 public class DepositController {
-    private static final String CLIENT_STRING = "client";
-    private static final String BANK_NAME = "bank";
-    private static final String PAGE_STRING = "page";
     private DepositService depositService;
     private ClientService clientService;
     private BankService bankService;
@@ -40,16 +37,16 @@ public class DepositController {
 
     @GetMapping
     public List<DepositDto> getDeposits(@RequestParam Map<String, String> requestParams) {
-        int pageNumber = Integer.parseInt(requestParams.getOrDefault(PAGE_STRING, "0"));
+        int pageNumber = Integer.parseInt(requestParams.getOrDefault(Constants.PAGE_STRING, "0"));
         Client client = null;
 //        Список вкладов по имени клиента
-        if (requestParams.containsKey(CLIENT_STRING)) {
-            client = clientService.getByName(requestParams.get(CLIENT_STRING));
+        if (requestParams.containsKey(Constants.CLIENT_STRING)) {
+            client = clientService.getByName(requestParams.get(Constants.CLIENT_STRING));
         }
         Bank bank = null;
         //        Список вкладов по названию банка
-        if (requestParams.containsKey(BANK_NAME)) {
-            bank = bankService.getBankByName(requestParams.get(BANK_NAME));
+        if (requestParams.containsKey(Constants.BANK_NAME)) {
+            bank = bankService.getBankByName(requestParams.get(Constants.BANK_NAME));
         }
         DepositFilter depositFilter = new DepositFilter(client, bank);
         return depositService.findAll(depositFilter.getSpec(), pageNumber);
@@ -81,7 +78,7 @@ public class DepositController {
 //        Нужно для того, чтобы указывать только id банка и клиента.
         deposit.setClient(clientService.getClientById(deposit.getClient().getId()));
         deposit.setBank(bankService.getBankById(deposit.getBank().getId()));
-        
+
         return new ResponseEntity<>(depositService.saveOrUpdate(deposit), HttpStatus.OK);
     }
 

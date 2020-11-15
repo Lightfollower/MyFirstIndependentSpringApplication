@@ -39,8 +39,8 @@ public class BankController {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(Constants.PAGE_STRING, "0"));
         Set<Long> banksByClientName = null;
         // Фильтрация банков по имени клиента
-        if (requestParams.containsKey(Constants.CLIENT_NAME)) {
-            banksByClientName = getBanksByClient(requestParams.get(Constants.CLIENT_NAME));
+        if (requestParams.containsKey(Constants.CLIENT_STRING)) {
+            banksByClientName = getBanksByClient(requestParams.get(Constants.CLIENT_STRING));
         }
         BankFilter bankFilter = new BankFilter(banksByClientName);
 
