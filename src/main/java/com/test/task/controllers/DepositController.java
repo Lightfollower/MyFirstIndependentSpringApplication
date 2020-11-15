@@ -4,6 +4,7 @@ import com.test.task.entities.Bank;
 import com.test.task.entities.Client;
 import com.test.task.entities.Deposit;
 import com.test.task.entities.dtos.DepositDto;
+import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.services.DepositService;
@@ -59,8 +60,12 @@ public class DepositController {
         if (deposit.getId() != null) {
             deposit.setId(null);
         }
+        if (bindingResult.hasErrors())
+            throw new MalformedEntityException();
+//        Нужно для того, чтобы указывать только id банка и клиента.
         deposit.setClient(clientService.getClientById(deposit.getClient().getId()));
         deposit.setBank(bankService.getBankById(deposit.getBank().getId()));
+
         return new ResponseEntity<>(depositService.saveOrUpdate(deposit), HttpStatus.OK);
     }
 
