@@ -73,6 +73,8 @@ public class ClientController {
         if (client.getId() != null) {
             client.setId(null);
         }
+        if(clientService.existsByName(client.getName()))
+            throw new MalformedEntityException("This name is busy");
         if (bindingResult.hasErrors())
             throw new MalformedEntityException("All fields must be filled");
         if (client.getForm() == null)

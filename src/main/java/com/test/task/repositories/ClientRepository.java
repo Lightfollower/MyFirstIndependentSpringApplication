@@ -14,4 +14,5 @@ public interface ClientRepository extends JpaRepository<Client, Long>, JpaSpecif
     Client getById(Long id);
     Client getByName(String name);
     Page<ClientDto> findAllBy(Specification<Client> spec, Pageable pageable);
+    boolean existsByName(String name);
 }

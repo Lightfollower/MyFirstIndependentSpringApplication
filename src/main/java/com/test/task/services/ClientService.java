@@ -76,6 +76,10 @@ public class ClientService {
         return clientRepository.existsById(id);
     }
 
+    public boolean existsByName(String name) {
+        return clientRepository.existsByName(name);
+    }
+
     public void deleteById(Long id){
         clientRepository.deleteById(id);
     }
