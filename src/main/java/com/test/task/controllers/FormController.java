@@ -4,6 +4,8 @@ import com.test.task.entities.Form;
 import com.test.task.entities.dtos.FormDto;
 import com.test.task.services.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,21 +26,22 @@ public class FormController {
     }
 
     @PostMapping
-    public FormDto addForm(@RequestBody Form form){
+    public ResponseEntity<?> addForm(@RequestBody Form form){
         if(form.getId() == null)
             form.setId(null);
-       return formService.saveOrUpdate(form);
+       return new ResponseEntity<>(formService.saveOrUpdate(form), HttpStatus.OK);
     }
 
     @PutMapping
-    public FormDto updateForm(@RequestBody Form form){
+    public ResponseEntity<?> updateForm(@RequestBody Form form){
         if(form.getId() == null)
             throw new RuntimeException("id can't be null");
-        return formService.saveOrUpdate(form);
+        return new ResponseEntity<>(formService.saveOrUpdate(form), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long id){
         formService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
