@@ -14,7 +14,7 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<?> handleSomeException(RuntimeException exc) {
-        return new ResponseEntity<>(exc.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("Sorry, an error occurred on the server", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler

@@ -85,7 +85,7 @@ public class ClientController {
     @PutMapping(consumes = "application/json")
     public ResponseEntity<?> modifyClient(@RequestBody @Validated Client client, BindingResult bindingResult) {
         if (client.getId() == null)
-            throw new NullIdException("client id can't be null");
+            throw new NullIdException();
         if (!clientService.existsById(client.getId()))
             throw new nonExistentIdException("No object with this id");
 //        Если имена, старое и новое, не совпадают, тогда делается проверка на уникальность имени по базе.
