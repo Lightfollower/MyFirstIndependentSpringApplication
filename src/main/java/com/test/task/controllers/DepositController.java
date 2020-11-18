@@ -59,7 +59,8 @@ public class DepositController {
         if (deposit.getId() != null) {
             deposit.setId(null);
         }
-        if (bindingResult.hasErrors())
+        if (bindingResult.hasErrors() || deposit.getClient() == null || deposit.getBank() == null ||
+        deposit.getClient().getId() == null || deposit.getBank().getId() == null)
             throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
 //        Нужно для того, чтобы указывать только id банка и клиента.
         deposit.setClient(clientService.getClientById(deposit.getClient().getId()));
