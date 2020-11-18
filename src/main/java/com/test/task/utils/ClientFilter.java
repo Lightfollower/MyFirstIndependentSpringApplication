@@ -23,6 +23,8 @@ public class ClientFilter {
                 String name = requestParams.get("name");
                 spec = spec.and(ClientSpecifications.nameEquals(name));
             }
+
+//            Попытка сортировать спецификациями
 //            if(requestParams.containsKey("name_sort")){
 //                String direction = requestParams.get("name_sort");
 //                spec = spec.and(ClientSpecifications.sortByNameSpec(direction));
@@ -34,9 +36,6 @@ public class ClientFilter {
             if (formFilter != null) {
                 spec = spec.and(ClientSpecifications.formIs(formFilter));
             }
-//            if (bankFilter != null) {
-//                spec = spec.and(ClientSpecifications.bankIs(bankFilter));
-//            }
 
         //        Фильтрация клиентов по названию банка.
         if (clientSet != null && !clientSet.isEmpty()) {

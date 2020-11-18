@@ -3,8 +3,8 @@ package com.test.task.services;
 import com.test.task.entities.Client;
 import com.test.task.entities.dtos.ClientDto;
 import com.test.task.repositories.ClientRepository;
+import com.test.task.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -15,9 +15,7 @@ import java.util.List;
 
 @Service
 public class ClientService {
-    final int PAGE_SIZE = 5;
     private ClientRepository clientRepository;
-    private DepositService depositService;
     private FormService formService;
 
     @Autowired
@@ -25,10 +23,6 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
-    @Autowired
-    public void setDepositService(DepositService depositService) {
-        this.depositService = depositService;
-    }
 
     @Autowired
     public void setFormService(FormService formService) {
@@ -41,19 +35,12 @@ public class ClientService {
         }
         List<ClientDto> clientDtoList = new ArrayList<>();
 
-        List<Client> clientList = clientRepository.findAll(spec, PageRequest.of(page, PAGE_SIZE, sort)).getContent();
+        List<Client> clientList = clientRepository.findAll(spec, PageRequest.of(page, Constants.PAGE_SIZE, sort)).getContent();
         for (Client client :
                 clientList) {
             clientDtoList.add(getDtoFromClient(client));
         }
         return clientDtoList;
-    }
-
-    public Page<ClientDto> findAllBy(Specification<Client> spec, int page) {
-        if (page < 1L) {
-            page = 1;
-        }
-        return clientRepository.findAllBy(spec, PageRequest.of(page, PAGE_SIZE));
     }
 
     public ClientDto saveOrUpdateClient(Client client) {
@@ -84,8 +71,7 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
-
-    public ClientDto getDtoFromClient(Client client) {
+    ClientDto getDtoFromClient(Client client) {
         ClientDto clientDto = new ClientDto();
         clientDto.setId(client.getId());
         clientDto.setName(client.getName());
@@ -94,17 +80,4 @@ public class ClientService {
         clientDto.setForm(formService.getFormDtoFromForm(client.getForm()));
         return clientDto;
     }
-
-    public Client getClientFromDto(ClientDto clientDto) {
-        Client client = new Client();
-        client.setId(clientDto.getId());
-        client.setName(clientDto.getName());
-        client.setShortName(clientDto.getShortName());
-        client.setAddress(clientDto.getAddress());
-//        client.setForm(clientDto.getForm());
-//        client.setDeposits(depositService.getDepositListFromDepositDtoList(clientDto.getDeposits(), client));
-        return client;
-    }
-
-
 }

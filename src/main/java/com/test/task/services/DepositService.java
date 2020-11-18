@@ -43,10 +43,6 @@ public class DepositService {
         return getDepositDtoFromDeposit(depositRepository.save(deposit), clientService.getDtoFromClient(deposit.getClient()));
     }
 
-    public DepositDto getDepositById(Long id) {
-        return depositRepository.getById(id);
-    }
-
     public void deleteById(Long id){
         depositRepository.deleteById(id);
     }

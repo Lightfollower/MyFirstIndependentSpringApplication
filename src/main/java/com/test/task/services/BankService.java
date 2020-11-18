@@ -3,6 +3,7 @@ package com.test.task.services;
 import com.test.task.entities.Bank;
 import com.test.task.entities.dtos.BankDto;
 import com.test.task.repositories.BankRepository;
+import com.test.task.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,18 +14,11 @@ import java.util.List;
 
 @Service
 public class BankService {
-    private static final int PAGE_SIZE = 5;
-    BankRepository bankRepository;
-    DepositService depositService;
+    private BankRepository bankRepository;
 
     @Autowired
     public BankService(BankRepository bankRepository) {
         this.bankRepository = bankRepository;
-    }
-
-    @Autowired
-    public void setDepositService(DepositService depositService) {
-        this.depositService = depositService;
     }
 
     public Bank getBankById(Long id){
@@ -38,7 +32,7 @@ public class BankService {
 
 
     public List<BankDto> findAll(Specification<Bank> spec, int pageNumber) {
-        List<Bank> banks = bankRepository.findAll(spec, PageRequest.of(pageNumber, PAGE_SIZE)).getContent();
+        List<Bank> banks = bankRepository.findAll(spec, PageRequest.of(pageNumber, Constants.PAGE_SIZE)).getContent();
         return getDtoListFromBankList(banks);
     }
 
@@ -74,7 +68,4 @@ public class BankService {
         bankDto.setBIC(bank.getBIC());
         return bankDto;
     }
-
-
-
 }

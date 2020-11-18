@@ -7,8 +7,8 @@ public class Constants {
     public static final String CLIENT_STRING = "client";
     public static final String noObjectWithThisId = "No object with this id";
     public static final String nameIsBusy = "name %s is busy";
-    public static String allFieldsMustBeFilled = "All fields must be filled";
-    //    public static String
+    public static final String allFieldsMustBeFilled = "All fields must be filled";
+//        public static String
 //    public static String
 //    public static String
 //    public static String

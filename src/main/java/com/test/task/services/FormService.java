@@ -23,31 +23,14 @@ public class FormService {
         List<Form> forms = formRepository.findAll();
         for (Form f :
                 forms) {
-            formDtos.add(getDtoFromForm(f));
+            formDtos.add(getFormDtoFromForm(f));
         }
         return formDtos;
-    }
-
-    private FormDto getDtoFromForm(Form f) {
-        FormDto formDto = new FormDto();
-        formDto.setId(f.getId());
-        formDto.setName(f.getName());
-        return formDto;
     }
 
     public Form getByName(String name){
         return formRepository.getByName(name);
     }
-
-    public FormDto getFormDtoById(Long id){
-        return getFormDtoFromForm(formRepository.getOne(id));
-    }
-
-    public Form getFormById(Long id) {
-        return formRepository.getOne(id);
-    }
-
-
 
     public FormDto saveOrUpdate(Form form){
         return getFormDtoFromForm(formRepository.save(form));
@@ -61,11 +44,7 @@ public class FormService {
          formRepository.deleteById(id);
     }
 
-//    public List<Form> findAll() {
-//        return formRepository.findAll();
-//    }
-
-    public FormDto getFormDtoFromForm(Form form) {
+    FormDto getFormDtoFromForm(Form form) {
         FormDto formDto = new FormDto();
         formDto.setId(form.getId());
         formDto.setName(form.getName());

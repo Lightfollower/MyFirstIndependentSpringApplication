@@ -25,8 +25,8 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/v1/banks")
 public class BankController {
-    BankService bankService;
-    ClientService clientService;
+    private BankService bankService;
+    private ClientService clientService;
 
     @Autowired
     public BankController(BankService bankService, ClientService clientService) {

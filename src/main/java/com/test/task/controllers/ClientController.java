@@ -42,7 +42,7 @@ public class ClientController {
     }
 
     @GetMapping(produces = "application/json")
-    public List<ClientDto> getClients(@RequestParam Map<String, String> requestParams/*, @RequestParam(name = "form", required = false) String form*/) {
+    public List<ClientDto> getClients(@RequestParam Map<String, String> requestParams) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(Constants.PAGE_STRING, "0"));
         //        Фильтрация клиентов по организационной форме.
         Form formFilter = null;

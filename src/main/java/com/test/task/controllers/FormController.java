@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("api/v1/forms")
 @RestController
 public class FormController {
-    FormService formService;
+    private FormService formService;
 
     @Autowired
     public FormController(FormService formService) {

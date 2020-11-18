@@ -1,12 +1,10 @@
 package com.test.task.utils;
 
 import com.test.task.entities.Bank;
-import com.test.task.entities.Client;
 import com.test.task.repositories.specifications.BankSpecifications;
 import lombok.Data;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -15,10 +13,6 @@ public class BankFilter {
 
     public BankFilter(Set<Long> banksIdSet) {
         this.spec = Specification.where(null);
-//        if (client != null) {
-//            spec = spec.and(BankSpecifications.clientIs(client));
-//        }
-
         if (banksIdSet != null && !banksIdSet.isEmpty()) {
             Specification specBanks = null;
             for (Long b : banksIdSet) {
