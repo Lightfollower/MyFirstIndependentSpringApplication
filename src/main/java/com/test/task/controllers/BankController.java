@@ -55,6 +55,8 @@ public class BankController {
             throw new MalformedEntityException(String.format(Constants.nameIsBusy, bank.getName()));
         if (bindingResult.hasErrors())
             throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
+        if (!bank.getBIC().matches("\\d*"))
+            throw new MalformedEntityException("BIC can't contain non numeric symbols");
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
     }
 
@@ -63,7 +65,7 @@ public class BankController {
         if (bank.getId() == null)
             throw new NullIdException();
         //        Если имена, старое и новое, не совпадают, тогда делается проверка на уникальность имени по базе.
-        if (!bankService.getBankById(bank.getId()).getName().equals(bank .getName()))
+        if (!bankService.getBankById(bank.getId()).getName().equals(bank.getName()))
 //            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность
             if (bankService.existsByName(bank.getName()))
                 throw new MalformedEntityException(String.format(Constants.nameIsBusy, bank.getName()));
