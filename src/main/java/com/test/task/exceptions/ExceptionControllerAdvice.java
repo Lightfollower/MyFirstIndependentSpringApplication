@@ -2,6 +2,7 @@ package com.test.task.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -25,5 +26,10 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<?> handleNullIdException(NullIdException exc) {
         return new ResponseEntity<>(exc.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleMalformedJSONFromFrontEnd(HttpMessageNotReadableException exc) {
+        return new ResponseEntity<>("Ошибка в формировании JSON объекта", HttpStatus.I_AM_A_TEAPOT);
     }
 }
