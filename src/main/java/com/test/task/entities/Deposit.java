@@ -1,13 +1,11 @@
 package com.test.task.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "deposits")
@@ -35,13 +33,11 @@ public class Deposit {
     @JoinTable(name = "deposits_clients",
             joinColumns = @JoinColumn(name = "deposit_id"),
             inverseJoinColumns = @JoinColumn(name = "client_id"))
-//    @JsonBackReference
     private Client client;
 
     @ManyToOne
     @JoinTable(name = "deposits_banks",
             joinColumns = @JoinColumn(name = "deposit_id"),
             inverseJoinColumns = @JoinColumn(name = "bank_id"))
-//    @JsonBackReference
     private Bank bank;
 }
