@@ -13,6 +13,9 @@ import com.test.task.services.FormService;
 import com.test.task.utils.ClientFilter;
 import com.test.task.utils.ClientSorter;
 import com.test.task.utils.Constants;
+//import io.swagger.annotations.Api;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +31,7 @@ import java.util.Set;
 @RestController
 //@CrossOrigin("*")
 @RequestMapping("/api/v1/clients")
-//@Api("Set of endpoints for CRUD operations for Products")
+@Api("Set of endpoints for CRUD operations for Products")
 public class ClientController {
     private ClientService clientService;
     private FormService formService;
@@ -40,6 +43,8 @@ public class ClientController {
         this.formService = formService;
         this.bankService = bankService;
     }
+
+    @ApiOperation("Returns list of all products")
 
     @GetMapping(produces = "application/json")
     public List<ClientDto> getClients(@RequestParam Map<String, String> requestParams) {
