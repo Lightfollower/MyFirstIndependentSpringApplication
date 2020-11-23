@@ -1,7 +1,6 @@
 package com.test.task.repositories.specifications;
 
 import com.test.task.entities.Bank;
-import com.test.task.entities.Client;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BankSpecifications {

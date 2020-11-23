@@ -15,10 +15,10 @@ public class ClientSorter {
             String direction = requestParams.get("form_sort");
             switch (direction) {
                 case "asc":
-                    sort = sort.and(Sort.by(Sort.Direction.ASC, "form.name"));
+                    sort = sort.and(Sort.by(Sort.Direction.ASC, "form.id"));
                     break;
                 case "desc":
-                    sort = sort.and(Sort.by(Sort.Direction.DESC, "form.name"));
+                    sort = sort.and(Sort.by(Sort.Direction.DESC, "form.id"));
                     break;
             }
         }
