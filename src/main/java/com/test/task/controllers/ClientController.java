@@ -13,9 +13,9 @@ import com.test.task.services.FormService;
 import com.test.task.utils.ClientFilter;
 import com.test.task.utils.ClientSorter;
 import com.test.task.utils.Constants;
-//import io.swagger.annotations.Api;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ import java.util.Set;
 @RestController
 //@CrossOrigin("*")
 @RequestMapping("/api/v1/clients")
-@Api("Set of endpoints for CRUD operations for Products")
+@Api("Set of endpoints for CRUD operations for clients")
 public class ClientController {
     private ClientService clientService;
     private FormService formService;
@@ -44,10 +44,9 @@ public class ClientController {
         this.bankService = bankService;
     }
 
-    @ApiOperation("Returns list of all products")
-
+    @ApiOperation("Returns list of all clients, selection by name, bank, organization form, address and sort by name and form")
     @GetMapping(produces = "application/json")
-    public List<ClientDto> getClients(@RequestParam Map<String, String> requestParams) {
+    public List<ClientDto> getClients(@RequestParam (required = false) @ApiParam(Constants.API_GET_CLIENTS) Map<String, String> requestParams) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(Constants.PAGE_STRING, "0"));
         //        Фильтрация клиентов по организационной форме.
         Form formFilter = null;

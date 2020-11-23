@@ -19,8 +19,8 @@ public class ClientFilter {
                 String address = requestParams.get("address");
                 spec = spec.and(ClientSpecifications.addressLike(address));
             }
-            if (requestParams.containsKey("name")) {
-                String name = requestParams.get("name");
+            if (requestParams.containsKey(Constants.CLIENT_STRING)) {
+                String name = requestParams.get(Constants.CLIENT_STRING);
                 spec = spec.and(ClientSpecifications.nameEquals(name));
             }
 

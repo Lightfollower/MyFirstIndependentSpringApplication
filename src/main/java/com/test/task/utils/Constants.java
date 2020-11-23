@@ -8,9 +8,6 @@ public class Constants {
     public static final String noObjectWithThisId = "No object with this id";
     public static final String nameIsBusy = "name %s is busy";
     public static final String allFieldsMustBeFilled = "All fields must be filled";
-//        public static String
-//    public static String
-//    public static String
-//    public static String
     public static final int PAGE_SIZE = 5;
+    public static final String API_GET_CLIENTS = "page - page number \n client - client name \n form - organization form \n bank - bank name \n form_sort - asc or desc direction of sort by organization form\nname_sort - asc or desc direction of sort by client name";
 }
