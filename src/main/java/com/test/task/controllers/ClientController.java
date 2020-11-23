@@ -44,8 +44,8 @@ public class ClientController {
         this.bankService = bankService;
     }
 
-    @ApiOperation("Returns list of all clients, selection by name, bank, organization form, address and sort by name and form")
     @GetMapping(produces = "application/json")
+    @ApiOperation("Returns list of all clients, selection by name, bank, organization form, address and sort by name and form")
     public List<ClientDto> getClients(@RequestParam (required = false) @ApiParam(Constants.API_GET_CLIENTS) Map<String, String> requestParams) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(Constants.PAGE_STRING, "0"));
         //        Фильтрация клиентов по организационной форме.
@@ -63,8 +63,8 @@ public class ClientController {
         return clientService.findAll(clientFilter.getSpec(), pageNumber, clientSorter.getSort());
     }
 
-    @ApiOperation("Returns client by client id in path variable")
     @GetMapping("/{id}")
+    @ApiOperation("Returns client by client id in path variable")
     public ResponseEntity<?> getClientById(@PathVariable Long id) {
         if (!clientService.existsById(id))
             throw new nonExistentIdException(Constants.noObjectWithThisId);
@@ -87,7 +87,7 @@ public class ClientController {
     }
 
     @PutMapping(consumes = "application/json")
-    @ApiOperation("Modifies an existing product")
+    @ApiOperation("Modifies an existing client")
     public ResponseEntity<?> modifyClient(@RequestBody @Validated Client client, BindingResult bindingResult) {
         if (client.getId() == null)
             throw new NullIdException();
@@ -107,7 +107,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("Deletes a product from the system. 404 if the client's identifier is not found.")
+    @ApiOperation("Deletes a client from the system. 404 if the client's identifier is not found.")
     public void delete(@PathVariable Long id) {
         if (!clientService.existsById(id))
             throw new nonExistentIdException(Constants.noObjectWithThisId);

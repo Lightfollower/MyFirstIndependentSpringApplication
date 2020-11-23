@@ -10,6 +10,9 @@ import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.utils.BankFilter;
 import com.test.task.utils.Constants;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/banks")
+@Api("Set of endpoints for CRUD operations for banks")
 public class BankController {
     private BankService bankService;
     private ClientService clientService;
@@ -35,7 +39,8 @@ public class BankController {
     }
 
     @GetMapping
-    public List<BankDto> getBanks(@RequestParam Map<String, String> requestParams) {
+    @ApiOperation("Returns list of all banks, selection by client name")
+    public List<BankDto> getBanks(@RequestParam(required = false) @ApiParam("client - client name") Map<String, String> requestParams) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(Constants.PAGE_STRING, "0"));
         Set<Long> banksByClientName = null;
         // Фильтрация банков по имени клиента
@@ -48,6 +53,7 @@ public class BankController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
+    @ApiOperation("Creates a new bank. If id != null, then it will be cleared")
     public ResponseEntity<?> add(@RequestBody @Validated Bank bank, BindingResult bindingResult) {
         if (bank.getId() != null)
             bank.setId(null);
@@ -61,6 +67,7 @@ public class BankController {
     }
 
     @PutMapping
+    @ApiOperation("Modifies an existing bank")
     public ResponseEntity<?> update(@RequestBody @Validated Bank bank, BindingResult bindingResult) {
         if (bank.getId() == null)
             throw new NullIdException();
@@ -76,13 +83,14 @@ public class BankController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation("Deletes a client from the system. 404 if the client's identifier is not found.")
     public void delete(@PathVariable Long id) {
         if (!bankService.existsById(id))
             throw new nonExistentIdException(Constants.noObjectWithThisId);
         bankService.deleteById(id);
     }
 
-    //    Возвращает Set с Id банков клиента, название которого передаётся в параметр clientName.
+    //    Возвращает Set с Id банков клиента, имя которого передаётся в параметр clientName.
     private Set<Long> getBanksByClient(String clientName) {
         Set<Long> banks = new HashSet<>();
         List<Deposit> deposits = clientService.getByName(clientName).getDeposits();
