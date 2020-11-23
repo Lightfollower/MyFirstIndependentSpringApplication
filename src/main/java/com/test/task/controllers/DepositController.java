@@ -6,11 +6,15 @@ import com.test.task.entities.Deposit;
 import com.test.task.entities.dtos.DepositDto;
 import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.exceptions.NullIdException;
+import com.test.task.exceptions.nonExistentIdException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.services.DepositService;
 import com.test.task.utils.Constants;
 import com.test.task.utils.DepositFilter;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +27,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/deposits")
+@Api("Set of endpoints for CRUD operations for deposits")
 public class DepositController {
     private DepositService depositService;
     private ClientService clientService;
@@ -36,7 +41,9 @@ public class DepositController {
     }
 
     @GetMapping
-    public List<DepositDto> getDeposits(@RequestParam Map<String, String> requestParams) {
+    @ApiOperation("Returns list of all deposits, selection by client name and bank")
+    public List<DepositDto> getDeposits(@RequestParam(required = false)
+                                        @ApiParam("page - page number\nclient - client name\nbank - bank name") Map<String, String> requestParams) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(Constants.PAGE_STRING, "0"));
         Client client = null;
 //        Список вкладов по имени клиента
@@ -55,12 +62,13 @@ public class DepositController {
 
     //    Достаточно указать id клиента и банка в теле запроса
     @PostMapping
+    @ApiOperation("Creates a new deposit. If id != null, then it will be cleared. It is enough to enter only id of client and bank")
     public ResponseEntity<?> add(@RequestBody @Validated Deposit deposit, BindingResult bindingResult) {
         if (deposit.getId() != null) {
             deposit.setId(null);
         }
         if (bindingResult.hasErrors() || deposit.getClient() == null || deposit.getBank() == null ||
-        deposit.getClient().getId() == null || deposit.getBank().getId() == null)
+                deposit.getClient().getId() == null || deposit.getBank().getId() == null)
             throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
 //        Нужно для того, чтобы указывать только id банка и клиента.
         deposit.setClient(clientService.getClientById(deposit.getClient().getId()));
@@ -70,6 +78,7 @@ public class DepositController {
     }
 
     @PutMapping
+    @ApiOperation("Modifies an existing deposit. It is enough to enter only id of client and bank")
     public ResponseEntity<?> modify(@RequestBody @Validated Deposit deposit, BindingResult bindingResult) {
         if (deposit.getId() == null) {
             throw new NullIdException();
@@ -84,8 +93,10 @@ public class DepositController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    @ApiOperation("Deletes a deposit from the system. 404 if the deposit's identifier is not found.")
+    public void delete(@PathVariable Long id) {
+        if (!bankService.existsById(id))
+            throw new nonExistentIdException(Constants.noObjectWithThisId);depositService.deleteById(id);
         depositService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

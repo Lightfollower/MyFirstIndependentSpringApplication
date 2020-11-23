@@ -40,7 +40,8 @@ public class BankController {
 
     @GetMapping
     @ApiOperation("Returns list of all banks, selection by client name")
-    public List<BankDto> getBanks(@RequestParam(required = false) @ApiParam("client - client name") Map<String, String> requestParams) {
+    public List<BankDto> getBanks(@RequestParam(required = false)
+                                  @ApiParam("page - page number\nclient - client name") Map<String, String> requestParams) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(Constants.PAGE_STRING, "0"));
         Set<Long> banksByClientName = null;
         // Фильтрация банков по имени клиента
