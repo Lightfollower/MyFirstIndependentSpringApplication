@@ -63,6 +63,7 @@ public class ClientController {
         return clientService.findAll(clientFilter.getSpec(), pageNumber, clientSorter.getSort());
     }
 
+    @ApiOperation("Returns client by client id in path variable")
     @GetMapping("/{id}")
     public ResponseEntity<?> getClientById(@PathVariable Long id) {
         if (!clientService.existsById(id))
@@ -71,6 +72,7 @@ public class ClientController {
     }
 
     @PostMapping(consumes = "application/json")
+    @ApiOperation("Creates a new client. If id != null, then it will be cleared")
     public ResponseEntity<?> add(@RequestBody @Validated Client client, BindingResult bindingResult) {
         if (client.getId() != null) {
             client.setId(null);
@@ -85,6 +87,7 @@ public class ClientController {
     }
 
     @PutMapping(consumes = "application/json")
+    @ApiOperation("Modifies an existing product")
     public ResponseEntity<?> modifyClient(@RequestBody @Validated Client client, BindingResult bindingResult) {
         if (client.getId() == null)
             throw new NullIdException();
@@ -104,6 +107,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation("Deletes a product from the system. 404 if the client's identifier is not found.")
     public void delete(@PathVariable Long id) {
         if (!clientService.existsById(id))
             throw new nonExistentIdException(Constants.noObjectWithThisId);
