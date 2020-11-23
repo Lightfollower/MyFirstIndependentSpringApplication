@@ -7,6 +7,8 @@ import com.test.task.exceptions.NullIdException;
 import com.test.task.exceptions.nonExistentIdException;
 import com.test.task.services.FormService;
 import com.test.task.utils.Constants;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @RequestMapping("api/v1/forms")
 @RestController
+@Api("Set of endpoints for CRUD operations for forms")
 public class FormController {
     private FormService formService;
 
@@ -27,11 +30,13 @@ public class FormController {
     }
 
     @GetMapping
+    @ApiOperation("Returns list of all banks")
     public List<FormDto> get(){
         return formService.findAll();
     }
 
     @PostMapping
+    @ApiOperation("Creates a new form. If id != null, then it will be cleared")
     public ResponseEntity<?> addForm(@RequestBody @Validated Form form, BindingResult bindingResult){
         if(form.getId() == null)
             form.setId(null);
@@ -41,6 +46,7 @@ public class FormController {
     }
 
     @PutMapping
+    @ApiOperation("Modifies an existing form")
     public ResponseEntity<?> updateForm(@RequestBody @Validated Form form, BindingResult bindingResult){
         if(form.getId() == null)
             throw new NullIdException();
@@ -50,6 +56,7 @@ public class FormController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation("Deletes a form from the system. 404 if the form's identifier is not found.")
     public void delete(@PathVariable Long id){
         if (!formService.existsById(id))
             throw new nonExistentIdException(Constants.noObjectWithThisId);
