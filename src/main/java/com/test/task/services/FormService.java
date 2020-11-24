@@ -2,8 +2,11 @@ package com.test.task.services;
 
 import com.test.task.entities.Form;
 import com.test.task.entities.dtos.FormDto;
+import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.repositories.FormRepository;
+import com.test.task.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,7 +21,7 @@ public class FormService {
         this.formRepository = formRepository;
     }
 
-    public List<FormDto> findAll(){
+    public List<FormDto> findAll() {
         List<FormDto> formDtos = new ArrayList<>();
         List<Form> forms = formRepository.findAll();
         for (Form f :
@@ -28,20 +31,20 @@ public class FormService {
         return formDtos;
     }
 
-    public Form getByName(String name){
+    public Form getByName(String name) {
+        if (!formRepository.existsByName(name))
+            throw new ResourceNotFoundException("No organization form with same name");
         return formRepository.getByName(name);
     }
 
-    public FormDto saveOrUpdate(Form form){
+    public FormDto saveOrUpdate(Form form) {
         return getFormDtoFromForm(formRepository.save(form));
     }
 
-    public boolean existsById(Long id) {
-        return formRepository.existsById(id);
-    }
-
-    public void deleteById(Long id){
-         formRepository.deleteById(id);
+    public void deleteById(Long id) {
+        if (!formRepository.existsById(id))
+            throw new NonExistentIdException(Constants.noObjectWithThisId);
+        formRepository.deleteById(id);
     }
 
     FormDto getFormDtoFromForm(Form form) {
