@@ -2,11 +2,13 @@ package com.test.task.services;
 
 import com.test.task.entities.Bank;
 import com.test.task.entities.dtos.BankDto;
+import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.repositories.BankRepository;
 import com.test.task.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,14 +24,16 @@ public class BankService {
     }
 
     public Bank getBankById(Long id){
+        if(!bankRepository.existsById(id))
+            throw new NonExistentIdException("No bank with same id");
         return bankRepository.getById(id);
     }
 
     public Bank getBankByName(String name){
+        if(!bankRepository.existsByName(name))
+            throw new ResourceNotFoundException("No bank with same name");
         return bankRepository.getByName(name);
     }
-
-
 
     public List<BankDto> findAll(Specification<Bank> spec, int pageNumber) {
         List<Bank> banks = bankRepository.findAll(spec, PageRequest.of(pageNumber, Constants.PAGE_SIZE)).getContent();
@@ -40,16 +44,16 @@ public class BankService {
         return getBankDtoFromBank(bankRepository.save(bank));
     }
 
+    public void deleteById(Long id) {
+        bankRepository.deleteById(id);
+    }
+
     public boolean existsById(Long id) {
         return bankRepository.existsById(id);
     }
 
     public boolean existsByName(String name) {
         return bankRepository.existsByName(name);
-    }
-
-    public void deleteById(Long id) {
-        bankRepository.deleteById(id);
     }
 
     private List<BankDto> getDtoListFromBankList(List<Bank> banks) {
