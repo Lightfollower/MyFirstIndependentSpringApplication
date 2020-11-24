@@ -16,6 +16,7 @@ import com.test.task.utils.Constants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import java.util.Set;
 //@CrossOrigin("*")
 @RequestMapping("/api/v1/clients")
 @Api("Set of endpoints for CRUD operations for clients")
+@Slf4j
 public class ClientController {
     private ClientService clientService;
     private FormService formService;
@@ -46,7 +48,7 @@ public class ClientController {
 
     @GetMapping(produces = "application/json")
     @ApiOperation("Returns list of all clients, selection by name, bank, organization form, address and sort by name and form")
-    public List<ClientDto> getClients(@RequestParam (required = false) @ApiParam(Constants.API_GET_CLIENTS) Map<String, String> requestParams) {
+    public List<ClientDto> getClients(@RequestParam(required = false) @ApiParam(Constants.API_GET_CLIENTS) Map<String, String> requestParams) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(Constants.PAGE_STRING, "0"));
         //        Фильтрация клиентов по организационной форме.
         Form formFilter = null;
@@ -60,6 +62,7 @@ public class ClientController {
         }
         ClientFilter clientFilter = new ClientFilter(requestParams, formFilter, clientsByBankName);
         ClientSorter clientSorter = new ClientSorter(requestParams);
+        log.info("Get clients");
         return clientService.findAll(clientFilter.getSpec(), pageNumber, clientSorter.getSort());
     }
 
@@ -73,7 +76,7 @@ public class ClientController {
 
     @PostMapping(consumes = "application/json")
     @ApiOperation("Creates a new client. If id != null, then it will be cleared")
-    public ResponseEntity<?> add(@RequestBody @Validated Client client, BindingResult bindingResult) {
+    public ResponseEntity<?> saveNewClient(@RequestBody @Validated Client client, BindingResult bindingResult) {
         if (client.getId() != null) {
             client.setId(null);
         }
@@ -88,14 +91,14 @@ public class ClientController {
 
     @PutMapping(consumes = "application/json")
     @ApiOperation("Modifies an existing client")
-    public ResponseEntity<?> modifyClient(@RequestBody @Validated Client client, BindingResult bindingResult) {
+    public ResponseEntity<?> updateClient(@RequestBody @Validated Client client, BindingResult bindingResult) {
         if (client.getId() == null)
             throw new NullIdException();
         if (!clientService.existsById(client.getId()))
             throw new nonExistentIdException(Constants.noObjectWithThisId);
 //        Если имена, старое и новое, не совпадают, тогда делается проверка на уникальность имени по базе.
         if (!clientService.getClientById(client.getId()).getName().equals(client.getName()))
-//            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность
+//            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность.
             if (clientService.existsByName(client.getName()))
                 throw new MalformedEntityException(String.format(Constants.nameIsBusy, client.getName()));
         if (bindingResult.hasErrors())
@@ -108,9 +111,10 @@ public class ClientController {
 
     @DeleteMapping("/{id}")
     @ApiOperation("Deletes a client from the system. 404 if the client's identifier is not found.")
-    public void delete(@PathVariable Long id) {
+    public void deleteClientById(@PathVariable Long id) {
         if (!clientService.existsById(id))
             throw new nonExistentIdException(Constants.noObjectWithThisId);
+        log.info("Deleting client with id " + id);
         clientService.deleteById(id);
     }
 
