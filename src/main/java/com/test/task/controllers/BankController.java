@@ -5,7 +5,6 @@ import com.test.task.entities.Deposit;
 import com.test.task.entities.dtos.BankDto;
 import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.exceptions.NullIdException;
-import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.utils.BankFilter;
@@ -21,10 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/banks")
@@ -52,6 +48,8 @@ public class BankController {
             log.info("Selecting banks by client name: " + requestParams.get(Constants.CLIENT_STRING));
             banksByClientName = getBanksByClient(requestParams.get(Constants.CLIENT_STRING));
         }
+        if (banksByClientName.isEmpty())
+            return Collections.EMPTY_LIST;
         BankFilter bankFilter = new BankFilter(banksByClientName);
         return bankService.findAll(bankFilter.getSpec(), pageNumber);
     }
@@ -62,21 +60,20 @@ public class BankController {
         log.info("Saving new bank");
         if (bank.getId() != null)
             bank.setId(null);
-        if (bankService.existsByName(bank.getName()))
-            throw new MalformedEntityException(String.format(Constants.nameIsBusy, bank.getName()));
         if (bindingResult.hasErrors())
             throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
         if (!bank.getBIC().matches("\\d*"))
             throw new MalformedEntityException("BIC can't contain non numeric symbols");
-        return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
+        return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.CREATED);
     }
 
     @PutMapping
-    @ApiOperation("Modifies an existing bank")
+    @ApiOperation("Updating an existing bank")
     public ResponseEntity<?> updateBank(@RequestBody @Validated Bank bank, BindingResult bindingResult) {
         log.info("Updating bank");
         if (bank.getId() == null)
             throw new NullIdException();
+//        Оставлю проверки здесь, перенос их в сервисный слой не рационален.
         //        Если имена, старое и новое, не совпадают, тогда делается проверка на уникальность имени по базе.
         if (!bankService.getBankById(bank.getId()).getName().equals(bank.getName()))
 //            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность
@@ -84,17 +81,15 @@ public class BankController {
                 throw new MalformedEntityException(String.format(Constants.nameIsBusy, bank.getName()));
         if (bindingResult.hasErrors())
             throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
+//        В BankDto, из которого на фронт-енде собран этот Bank, отсутствует поле deposits. Нужно его заполнить.
         bank.setDeposits(bankService.getBankById(bank.getId()).getDeposits());
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("Deletes a client from the system. 404 if the client's identifier is not found.")
+    @ApiOperation("Deletes a bank from the system. 404 if the client's identifier is not found.")
     public void deleteBankById(@PathVariable Long id) {
         log.info("Deleting bank with id: " + id);
-        if (!bankService.existsById(id))
-            throw new NonExistentIdException(Constants.noObjectWithThisId);
-        log.info("Deleting client with id " + id);
         bankService.deleteById(id);
     }
 
