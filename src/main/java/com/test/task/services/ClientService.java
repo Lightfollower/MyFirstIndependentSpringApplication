@@ -2,12 +2,14 @@ package com.test.task.services;
 
 import com.test.task.entities.Client;
 import com.test.task.entities.dtos.ClientDto;
+import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.repositories.ClientRepository;
 import com.test.task.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,7 +36,6 @@ public class ClientService {
             page = 0;
         }
         List<ClientDto> clientDtoList = new ArrayList<>();
-
         List<Client> clientList = clientRepository.findAll(spec, PageRequest.of(page, Constants.PAGE_SIZE, sort)).getContent();
         for (Client client :
                 clientList) {
@@ -48,10 +49,14 @@ public class ClientService {
     }
 
     public Client getClientById(Long id) {
+        if (!clientRepository.existsById(id))
+            throw new NonExistentIdException("No client with same id");
         return clientRepository.getById(id);
     }
 
-    public Client getByName(String name){
+    public Client getByName(String name) {
+        if (!clientRepository.existsByName(name))
+            throw new ResourceNotFoundException("No client with same name");
         return clientRepository.getByName(name);
     }
 
@@ -67,7 +72,7 @@ public class ClientService {
         return clientRepository.existsByName(name);
     }
 
-    public void deleteById(Long id){
+    public void deleteById(Long id) {
         clientRepository.deleteById(id);
     }
 
