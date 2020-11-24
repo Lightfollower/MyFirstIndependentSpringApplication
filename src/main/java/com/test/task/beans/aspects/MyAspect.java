@@ -6,30 +6,25 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Date;
-
 @Aspect
 @Component
 @Slf4j
 public class MyAspect {
-    @AfterReturning(pointcut = "execution(public * com.test.task.controllers.*Controller.get*ById(*))",
-            returning = "result")
-    public void getSomethingById(ResponseEntity result){
-        log.info("Get entity: " + result.getBody());
+    @AfterReturning(pointcut = "execution(public * com.test.task.controllers.*Controller.get*(*))")
+    public void getSomething() {
+        log.info("Get success");
     }
 
-    @AfterReturning(pointcut = "execution(public * com.test.task.controllers.*Controller.saveNew*(*, *))",
+    @AfterReturning(pointcut = "execution(public * com.test.task.controllers.*Controller.saveNew*(..))",
             returning = "result")
     public void savingNewSomething(ResponseEntity result) {
-        log.info("Saving new entity from " + result.getBody());
+        log.info("Save success: " + result.getBody());
     }
 
-    @AfterReturning(pointcut = "execution(public * com.test.task.controllers.*Controller.update*(*, *))",
+    @AfterReturning(pointcut = "execution(public * com.test.task.controllers.*Controller.update*(..))",
             returning = "result")
     public void updatingSomething(ResponseEntity result) {
-        log.info("Update entity from " + result.getBody());
+        log.info("Update success: " + result.getBody());
     }
 
     @AfterReturning(pointcut = "execution(public * com.test.task.controllers.*Controller.delete*(*))")
