@@ -6,7 +6,7 @@ import com.test.task.entities.Form;
 import com.test.task.entities.dtos.ClientDto;
 import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.exceptions.NullIdException;
-import com.test.task.exceptions.nonExistentIdException;
+import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.services.FormService;
@@ -49,6 +49,13 @@ public class ClientController {
     @GetMapping(produces = "application/json")
     @ApiOperation("Returns list of all clients, selection by name, bank, organization form, address and sort by name and form")
     public List<ClientDto> getClients(@RequestParam(required = false) @ApiParam(Constants.API_GET_CLIENTS) Map<String, String> requestParams) {
+        log.info("Get clients");
+        StringBuilder stringBuilder = new StringBuilder("Params:\n");
+        for (Map.Entry<String, String> stringEntry :
+                requestParams.entrySet()) {
+            stringBuilder.append(stringEntry.toString() + " ");
+        }
+        log.info(stringBuilder.toString());
         int pageNumber = Integer.parseInt(requestParams.getOrDefault(Constants.PAGE_STRING, "0"));
         //        Фильтрация клиентов по организационной форме.
         Form formFilter = null;
@@ -62,21 +69,22 @@ public class ClientController {
         }
         ClientFilter clientFilter = new ClientFilter(requestParams, formFilter, clientsByBankName);
         ClientSorter clientSorter = new ClientSorter(requestParams);
-        log.info("Get clients");
         return clientService.findAll(clientFilter.getSpec(), pageNumber, clientSorter.getSort());
     }
 
     @GetMapping("/{id}")
     @ApiOperation("Returns client by client id in path variable")
     public ResponseEntity<?> getClientById(@PathVariable Long id) {
+        log.info("Get client by id " + id);
         if (!clientService.existsById(id))
-            throw new nonExistentIdException(Constants.noObjectWithThisId);
+            throw new NonExistentIdException(Constants.noObjectWithThisId);
         return new ResponseEntity<>(clientService.getClientDtoById(id), HttpStatus.OK);
     }
 
     @PostMapping(consumes = "application/json")
     @ApiOperation("Creates a new client. If id != null, then it will be cleared")
     public ResponseEntity<?> saveNewClient(@RequestBody @Validated Client client, BindingResult bindingResult) {
+        log.info("Saving new client");
         if (client.getId() != null) {
             client.setId(null);
         }
@@ -86,16 +94,17 @@ public class ClientController {
             throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
         if (client.getForm() == null)
             throw new MalformedEntityException("Choose an organizational form");
-        return new ResponseEntity<>(clientService.saveOrUpdateClient(client), HttpStatus.OK);
+        return new ResponseEntity<>(clientService.saveOrUpdateClient(client), HttpStatus.CREATED);
     }
 
     @PutMapping(consumes = "application/json")
     @ApiOperation("Modifies an existing client")
     public ResponseEntity<?> updateClient(@RequestBody @Validated Client client, BindingResult bindingResult) {
+        log.info("Updating client");
         if (client.getId() == null)
             throw new NullIdException();
         if (!clientService.existsById(client.getId()))
-            throw new nonExistentIdException(Constants.noObjectWithThisId);
+            throw new NonExistentIdException(Constants.noObjectWithThisId);
 //        Если имена, старое и новое, не совпадают, тогда делается проверка на уникальность имени по базе.
         if (!clientService.getClientById(client.getId()).getName().equals(client.getName()))
 //            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность.
@@ -112,9 +121,9 @@ public class ClientController {
     @DeleteMapping("/{id}")
     @ApiOperation("Deletes a client from the system. 404 if the client's identifier is not found.")
     public void deleteClientById(@PathVariable Long id) {
-        if (!clientService.existsById(id))
-            throw new nonExistentIdException(Constants.noObjectWithThisId);
         log.info("Deleting client with id " + id);
+        if (!clientService.existsById(id))
+            throw new NonExistentIdException(Constants.noObjectWithThisId);
         clientService.deleteById(id);
     }
 
