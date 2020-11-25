@@ -4,7 +4,6 @@ import com.test.task.entities.Form;
 import com.test.task.entities.dtos.FormDto;
 import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.exceptions.NullIdException;
-import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.services.FormService;
 import com.test.task.utils.Constants;
 import io.swagger.annotations.Api;
@@ -45,8 +44,8 @@ public class FormController {
         if(form.getId() == null)
             form.setId(null);
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
-       return new ResponseEntity<>(formService.saveOrUpdate(form), HttpStatus.OK);
+            throw new MalformedEntityException(Constants.ALL_FIELDS_MUST_BE_FILLED);
+       return new ResponseEntity<>(formService.saveOrUpdate(form), HttpStatus.CREATED);
     }
 
     @PutMapping
@@ -56,7 +55,7 @@ public class FormController {
         if(form.getId() == null)
             throw new NullIdException();
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
+            throw new MalformedEntityException(Constants.ALL_FIELDS_MUST_BE_FILLED);
         return new ResponseEntity<>(formService.saveOrUpdate(form), HttpStatus.OK);
     }
 
