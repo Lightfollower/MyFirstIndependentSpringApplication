@@ -6,7 +6,6 @@ import com.test.task.entities.Deposit;
 import com.test.task.entities.dtos.DepositDto;
 import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.exceptions.NullIdException;
-import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.services.DepositService;
@@ -23,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -52,12 +52,15 @@ public class DepositController {
 //        Список вкладов по имени клиента
         if (requestParams.containsKey(Constants.CLIENT_STRING)) {
             client = clientService.getByName(requestParams.get(Constants.CLIENT_STRING));
+            if(client.getDeposits().isEmpty())
+                return Collections.emptyList();
         }
         Bank bank = null;
         //        Список вкладов по названию банка
-        if (requestParams.containsKey(Constants.BANK_NAME)) {
-            bank = bankService.getBankByName(requestParams.get(Constants.BANK_NAME));
-        }
+        if (requestParams.containsKey(Constants.BANK_STRING)) {
+            bank = bankService.getBankByName(requestParams.get(Constants.BANK_STRING));
+            if(bank.getDeposits().isEmpty())
+                return Collections.emptyList();}
         DepositFilter depositFilter = new DepositFilter(client, bank);
         return depositService.findAll(depositFilter.getSpec(), pageNumber);
     }
@@ -73,12 +76,12 @@ public class DepositController {
         }
         if (bindingResult.hasErrors() || deposit.getClient() == null || deposit.getBank() == null ||
                 deposit.getClient().getId() == null || deposit.getBank().getId() == null)
-            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
+            throw new MalformedEntityException(Constants.ALL_FIELDS_MUST_BE_FILLED);
 //        Нужно для того, чтобы указывать только id банка и клиента.
         deposit.setClient(clientService.getClientById(deposit.getClient().getId()));
         deposit.setBank(bankService.getBankById(deposit.getBank().getId()));
 
-        return new ResponseEntity<>(depositService.saveOrUpdate(deposit), HttpStatus.OK);
+        return new ResponseEntity<>(depositService.saveOrUpdate(deposit), HttpStatus.CREATED);
     }
 
     @PutMapping
@@ -89,7 +92,7 @@ public class DepositController {
             throw new NullIdException();
         }
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
+            throw new MalformedEntityException(Constants.ALL_FIELDS_MUST_BE_FILLED);
 //        Нужно для того, чтобы указывать только id банка и клиента.
         deposit.setClient(clientService.getClientById(deposit.getClient().getId()));
         deposit.setBank(bankService.getBankById(deposit.getBank().getId()));
@@ -101,8 +104,6 @@ public class DepositController {
     @ApiOperation("Deletes a deposit from the system. 404 if the deposit's identifier is not found.")
     public void deleteDepositById(@PathVariable Long id) {
        log.info("Deleting deposit with id: " + id);
-        if (!bankService.existsById(id))
-            throw new NonExistentIdException(Constants.noObjectWithThisId);depositService.deleteById(id);
         depositService.deleteById(id);
     }
 }
