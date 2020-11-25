@@ -47,9 +47,9 @@ public class BankController {
         if (requestParams.containsKey(Constants.CLIENT_STRING)) {
             log.info("Selecting banks by client name: " + requestParams.get(Constants.CLIENT_STRING));
             banksByClientName = getBanksByClient(requestParams.get(Constants.CLIENT_STRING));
+            if (banksByClientName.isEmpty())
+                return Collections.EMPTY_LIST;
         }
-        if (banksByClientName.isEmpty())
-            return Collections.EMPTY_LIST;
         BankFilter bankFilter = new BankFilter(banksByClientName);
         return bankService.findAll(bankFilter.getSpec(), pageNumber);
     }
@@ -61,7 +61,7 @@ public class BankController {
         if (bank.getId() != null)
             bank.setId(null);
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
+            throw new MalformedEntityException(Constants.ALL_FIELDS_MUST_BE_FILLED);
         if (!bank.getBIC().matches("\\d*"))
             throw new MalformedEntityException("BIC can't contain non numeric symbols");
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.CREATED);
@@ -78,9 +78,9 @@ public class BankController {
         if (!bankService.getBankById(bank.getId()).getName().equals(bank.getName()))
 //            Если не совпали имена, значит есть запрос на смену имени и его нужно проверить на уникальность
             if (bankService.existsByName(bank.getName()))
-                throw new MalformedEntityException(String.format(Constants.nameIsBusy, bank.getName()));
+                throw new MalformedEntityException(String.format(Constants.NAME_IS_BUSY, bank.getName()));
         if (bindingResult.hasErrors())
-            throw new MalformedEntityException(Constants.allFieldsMustBeFilled);
+            throw new MalformedEntityException(Constants.ALL_FIELDS_MUST_BE_FILLED);
 //        В BankDto, из которого на фронт-енде собран этот Bank, отсутствует поле deposits. Нужно его заполнить.
         bank.setDeposits(bankService.getBankById(bank.getId()).getDeposits());
         return new ResponseEntity<>(bankService.saveOrUpdate(bank), HttpStatus.OK);
