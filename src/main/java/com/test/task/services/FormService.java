@@ -33,7 +33,7 @@ public class FormService {
 
     public Form getByName(String name) {
         if (!formRepository.existsByName(name))
-            throw new ResourceNotFoundException("No organization form with same name");
+            throw new ResourceNotFoundException(String.format(Constants.NO_OBJECT_WITH_THIS_NAME, "form"));
         return formRepository.getByName(name);
     }
 
@@ -43,7 +43,7 @@ public class FormService {
 
     public void deleteById(Long id) {
         if (!formRepository.existsById(id))
-            throw new NonExistentIdException(Constants.noObjectWithThisId);
+            throw new NonExistentIdException(Constants.NO_OBJECT_WITH_THIS_ID);
         formRepository.deleteById(id);
     }
 
