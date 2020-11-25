@@ -13,7 +13,7 @@ public class BankFilter {
 
     public BankFilter(Set<Long> banksIdSet) {
         this.spec = Specification.where(null);
-        if (banksIdSet != null && !banksIdSet.isEmpty()) {
+        if (banksIdSet != null) {
             Specification specBanks = null;
             for (Long b : banksIdSet) {
                 if (specBanks == null) {
