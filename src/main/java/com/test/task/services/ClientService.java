@@ -2,6 +2,7 @@ package com.test.task.services;
 
 import com.test.task.entities.Client;
 import com.test.task.entities.dtos.ClientDto;
+import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.repositories.ClientRepository;
 import com.test.task.utils.Constants;
@@ -45,22 +46,26 @@ public class ClientService {
     }
 
     public ClientDto saveOrUpdateClient(Client client) {
+        if (clientRepository.existsByName(client.getName()))
+            throw new MalformedEntityException(String.format(Constants.NAME_IS_BUSY, client.getName()));
         return getDtoFromClient(clientRepository.save(client));
     }
 
     public Client getClientById(Long id) {
         if (!clientRepository.existsById(id))
-            throw new NonExistentIdException("No client with same id");
+            throw new NonExistentIdException(String.format(Constants.NO_OBJECT_WITH_THIS_ID, Constants.CLIENT_STRING));
         return clientRepository.getById(id);
     }
 
     public Client getByName(String name) {
         if (!clientRepository.existsByName(name))
-            throw new ResourceNotFoundException("No client with same name");
+            throw new ResourceNotFoundException(String.format(Constants.NO_OBJECT_WITH_THIS_NAME, Constants.CLIENT_STRING));
         return clientRepository.getByName(name);
     }
 
     public ClientDto getClientDtoById(Long id) {
+        if (!clientRepository.existsById(id))
+            throw new NonExistentIdException(String.format(Constants.NO_OBJECT_WITH_THIS_ID, Constants.CLIENT_STRING));
         return getDtoFromClient(clientRepository.getById(id));
     }
 
@@ -73,6 +78,8 @@ public class ClientService {
     }
 
     public void deleteById(Long id) {
+        if (!clientRepository.existsById(id))
+            throw new NonExistentIdException(Constants.NO_OBJECT_WITH_THIS_ID);
         clientRepository.deleteById(id);
     }
 
