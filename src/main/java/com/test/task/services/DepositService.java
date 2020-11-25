@@ -3,6 +3,7 @@ package com.test.task.services;
 import com.test.task.entities.Deposit;
 import com.test.task.entities.dtos.ClientDto;
 import com.test.task.entities.dtos.DepositDto;
+import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.repositories.DepositRepository;
 import com.test.task.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,9 @@ public class DepositService {
         return getDepositDtoFromDeposit(depositRepository.save(deposit), clientService.getDtoFromClient(deposit.getClient()));
     }
 
-    public void deleteById(Long id){
+    public void deleteById(Long id) {
+        if (!bankService.existsById(id))
+            throw new NonExistentIdException(Constants.NO_OBJECT_WITH_THIS_ID);
         depositRepository.deleteById(id);
     }
 
@@ -56,7 +59,7 @@ public class DepositService {
         return depositDtos;
     }
 
-//    Метод на случай, если ClientDto будет содержать список вкладов
+    //    Метод на случай, если ClientDto будет содержать список вкладов
     public List<DepositDto> getDtoListFromDepositList(List<Deposit> deposits, ClientDto clientDto) {
         List<DepositDto> depositDtos = new ArrayList<>();
         for (Deposit deposit :
