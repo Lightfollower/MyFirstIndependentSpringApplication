@@ -2,6 +2,7 @@ package com.test.task.services;
 
 import com.test.task.entities.Bank;
 import com.test.task.entities.dtos.BankDto;
+import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.repositories.BankRepository;
 import com.test.task.utils.Constants;
@@ -23,15 +24,15 @@ public class BankService {
         this.bankRepository = bankRepository;
     }
 
-    public Bank getBankById(Long id){
-        if(!bankRepository.existsById(id))
-            throw new NonExistentIdException("No bank with same id");
+    public Bank getBankById(Long id) {
+        if (!bankRepository.existsById(id))
+            throw new NonExistentIdException(String.format(Constants.NO_OBJECT_WITH_THIS_ID, Constants.BANK_STRING));
         return bankRepository.getById(id);
     }
 
-    public Bank getBankByName(String name){
-        if(!bankRepository.existsByName(name))
-            throw new ResourceNotFoundException("No bank with same name");
+    public Bank getBankByName(String name) {
+        if (!bankRepository.existsByName(name))
+            throw new ResourceNotFoundException(String.format(Constants.NO_OBJECT_WITH_THIS_NAME, Constants.BANK_STRING));
         return bankRepository.getByName(name);
     }
 
@@ -40,11 +41,15 @@ public class BankService {
         return getDtoListFromBankList(banks);
     }
 
-    public BankDto saveOrUpdate(Bank bank){
+    public BankDto saveOrUpdate(Bank bank) {
+        if (bankRepository.existsByName(bank.getName()))
+            throw new MalformedEntityException(String.format(Constants.NAME_IS_BUSY, bank.getName()));
         return getBankDtoFromBank(bankRepository.save(bank));
     }
 
     public void deleteById(Long id) {
+        if (!bankRepository.existsById(id))
+            throw new NonExistentIdException(String.format(Constants.NO_OBJECT_WITH_THIS_ID, Constants.BANK_STRING));
         bankRepository.deleteById(id);
     }
 
