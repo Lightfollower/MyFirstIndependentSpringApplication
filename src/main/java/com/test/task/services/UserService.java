@@ -91,7 +91,12 @@ public class UserService implements UserDetailsService {
         User user = new User();
         user.setName(systemUser.getName());
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
-        user.setRoles(Arrays.asList(roleService.findByName("admin")));
+        List<Role> roles = new ArrayList<>();
+        for (String role :
+                systemUser.getRoles()) {
+            roles.add(roleService.findByName(role));
+        }
+        user.setRoles(roles);
         return user;
     }
 
