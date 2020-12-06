@@ -11,6 +11,8 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @FieldMatch(first = "password", second = "matchingPassword", message = "The password fields must match")
 public class SystemUser {
+    private Long id;
+
     @NotNull(message = "Name is required")
     private String name;
 
