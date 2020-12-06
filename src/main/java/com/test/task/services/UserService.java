@@ -4,6 +4,7 @@ import com.test.task.entities.Role;
 import com.test.task.entities.dtos.SystemUser;
 import com.test.task.entities.User;
 import com.test.task.exceptions.MalformedEntityException;
+import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.repositories.UserRepository;
 import com.test.task.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,12 +57,13 @@ public class UserService implements UserDetailsService {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
-
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
+    public List<SystemUser> findAll() {
+        List<SystemUser> systemUsers = new ArrayList<>();
+        for (User u :
+                userRepository.findAll()) {
+            systemUsers.add(getSystemUserFromUser(u));
+        }
+        return systemUsers;
     }
 
     @Transactional
@@ -72,6 +71,20 @@ public class UserService implements UserDetailsService {
         if (existByName(systemUser.getName()))
             throw new MalformedEntityException(String.format(Constants.NAME_IS_BUSY, systemUser.getName()));
         userRepository.save(getUserFromSystemUser(systemUser));
+    }
+
+    public void deleteById(Long id) {
+        if (!userRepository.existsById(id))
+            throw new NonExistentIdException(Constants.NO_OBJECT_WITH_THIS_ID);
+        userRepository.deleteById(id);
+    }
+
+    public boolean existByName(String name) {
+        return userRepository.existsByName(name);
+    }
+
+    public boolean existById(Long id) {
+        return userRepository.existsById(id);
     }
 
     private User getUserFromSystemUser(SystemUser systemUser) {
@@ -82,11 +95,10 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public boolean existByName(String name) {
-        return userRepository.existsByName(name);
-    }
-
-    public boolean existById(Long id){
-        return userRepository.existsById(id);
+    private SystemUser getSystemUserFromUser(User u) {
+        SystemUser systemUser = new SystemUser();
+        systemUser.setId(u.getId());
+        systemUser.setName(u.getName());
+        return systemUser;
     }
 }
