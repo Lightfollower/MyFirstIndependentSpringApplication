@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -30,4 +32,6 @@ public class SystemUser {
     @Size(min = 3, message = "password is too short")
     @ApiModelProperty(notes = "password check")
     private String matchingPassword;
+
+    private ArrayList<String> roles;
 }
