@@ -82,6 +82,7 @@ public class UserService implements UserDetailsService {
         user.setName(systemUser.getName());
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
         user.setRoles(Arrays.asList(roleService.findByName("admin")));
+        userRepository.save(user);
     }
 
     private boolean existByName(String name) {

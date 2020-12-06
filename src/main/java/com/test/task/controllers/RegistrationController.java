@@ -38,6 +38,7 @@ public class RegistrationController {
         if (bindingResult.hasErrors())
             throw new MalformedEntityException("Passwords must match and be at least 3 characters");
 //        Optional<User> existing = userService.findByName(systemUser.getName());
+        userService.save(systemUser);
         return new ResponseEntity<>( HttpStatus.OK);
     }
 }
