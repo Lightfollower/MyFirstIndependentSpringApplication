@@ -98,8 +98,6 @@ public class ClientController {
         log.info("Updating client");
         if (client.getId() == null)
             throw new NullIdException();
-        if (!clientService.existsById(client.getId()))
-            throw new NonExistentIdException(Constants.NO_OBJECT_WITH_THIS_ID);
 //        Оставлю проверки здесь, перенос их в сервисный слой не рационален.
 //        Если имена, старое и новое, не совпадают, тогда делается проверка на уникальность имени по базе.
         if (!clientService.getClientById(client.getId()).getName().equals(client.getName()))
