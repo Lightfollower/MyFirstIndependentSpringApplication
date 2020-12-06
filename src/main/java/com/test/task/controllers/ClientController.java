@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-//@CrossOrigin("*")
 @RequestMapping("/api/v1/clients")
 @Api("Set of endpoints for CRUD operations for clients")
 @Slf4j
