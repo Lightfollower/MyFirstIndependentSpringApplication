@@ -6,7 +6,6 @@ import com.test.task.entities.Form;
 import com.test.task.entities.dtos.ClientDto;
 import com.test.task.exceptions.MalformedEntityException;
 import com.test.task.exceptions.NullIdException;
-import com.test.task.exceptions.NonExistentIdException;
 import com.test.task.services.BankService;
 import com.test.task.services.ClientService;
 import com.test.task.services.FormService;
@@ -95,9 +94,9 @@ public class ClientController {
     @PutMapping(consumes = "application/json")
     @ApiOperation("Modifies an existing client")
     public ResponseEntity<?> updateClient(@RequestBody @Validated Client client, BindingResult bindingResult) {
-        log.info("Updating client");
         if (client.getId() == null)
             throw new NullIdException();
+        log.info("Updating client with id " + client.getId());
 //        Оставлю проверки здесь, перенос их в сервисный слой не рационален.
 //        Если имена, старое и новое, не совпадают, тогда делается проверка на уникальность имени по базе.
         if (!clientService.getClientById(client.getId()).getName().equals(client.getName()))

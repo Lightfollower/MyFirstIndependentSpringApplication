@@ -42,11 +42,4 @@ public class Client {
     joinColumns = @JoinColumn(name = "client_id"),
     inverseJoinColumns = @JoinColumn(name = "form_id"))
     private Form form;
-
-//    public Client(Long id, String name, String shortName, String address) {
-//        this.id = id;
-//        this.name = name;
-//        this.shortName = shortName;
-//        this.address = address;
-//    }
 }
