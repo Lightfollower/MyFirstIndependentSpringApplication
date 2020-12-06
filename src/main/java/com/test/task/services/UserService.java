@@ -55,13 +55,6 @@ public class UserService implements UserDetailsService {
                 mapRolesToAuthorities(user.getRoles()));
     }
 
-    public User saveOrUpdate(User user) {
-        User temp = userRepository.findById(user.getId()).get();
-        user.setName(temp.getName());
-        user.setPassword(temp.getPassword());
-        return userRepository.save(user);
-    }
-
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
@@ -70,22 +63,30 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public void deleteById(int id) {
-        userRepository.deleteById((long) id);
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 
     @Transactional
-    public void save(SystemUser systemUser) {
-        User user = new User();
+    public void saveOrUpdate(SystemUser systemUser) {
         if (existByName(systemUser.getName()))
             throw new MalformedEntityException(String.format(Constants.NAME_IS_BUSY, systemUser.getName()));
+        userRepository.save(getUserFromSystemUser(systemUser));
+    }
+
+    private User getUserFromSystemUser(SystemUser systemUser) {
+        User user = new User();
         user.setName(systemUser.getName());
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
         user.setRoles(Arrays.asList(roleService.findByName("admin")));
-        userRepository.save(user);
+        return user;
     }
 
-    private boolean existByName(String name) {
+    public boolean existByName(String name) {
         return userRepository.existsByName(name);
+    }
+
+    public boolean existById(Long id){
+        return userRepository.existsById(id);
     }
 }
